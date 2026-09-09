@@ -1341,13 +1341,26 @@
             if (cubeExploded) return;
             cubeExploded = true;
 
-            const cube = document.getElementById('memoryCube');
             const bgMusic = document.getElementById('bgMusic');
+            if (window.parent && window.parent !== window && window.parent.isMasterAudioPlaying) {
+                // Master audio in parent window is already playing Chăm Hoa.mp3 seamlessly!
+            } else if (bgMusic && bgMusic.paused) {
+                const savedTime = parseFloat(sessionStorage.getItem('bgMusicTime') || '0');
+                if (savedTime > 0) bgMusic.currentTime = savedTime;
+                bgMusic.volume = 0.8;
+                bgMusic.play().catch(err => console.log("Music play blocked: ", err));
 
-            bgMusic.volume = 0.8;
-            bgMusic.play().catch(err => console.log("Music play blocked: ", err));
+                setInterval(() => {
+                    if (!bgMusic.paused) {
+                        sessionStorage.setItem('bgMusicTime', bgMusic.currentTime);
+                    }
+                }, 300);
+            }
 
-            cube.classList.add('explode');
+            const cube = document.getElementById('memoryCube');
+            if (cube) {
+                cube.classList.add('explode');
+            }
 
             document.getElementById('decorLeft').classList.add('active');
             document.getElementById('decorRight').classList.add('active');

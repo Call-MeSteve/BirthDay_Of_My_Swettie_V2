@@ -7,10 +7,12 @@ let fullscreenRequested = false;
 let textSequenceFinished = false;
 
 function requestFullScreen() {
-    const el = document.documentElement;
-    if      (el.requestFullscreen)       el.requestFullscreen();
-    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-    else if (el.msRequestFullscreen)     el.msRequestFullscreen();
+    try {
+        const el = (window.parent && window.parent !== window) ? window.parent.document.documentElement : document.documentElement;
+        if      (el.requestFullscreen)       el.requestFullscreen().catch(() => {});
+        else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+        else if (el.msRequestFullscreen)     el.msRequestFullscreen();
+    } catch(e) {}
 }
 
 function onUserInteract() {
@@ -518,9 +520,24 @@ window.addEventListener("orientationchange", tryStartEffects);
 const sound = document.getElementById('sound');
 
 function playSound() {
-    if (sound.paused) {
-        sound.currentTime = 41;
+    // 1. If running inside seamless frame and master audio is playing, keep it playing seamlessly
+    if (window.parent && window.parent !== window && window.parent.isMasterAudioPlaying) {
+        return;
+    }
+    // 2. Fallback if opened directly
+    if (sound && sound.paused) {
+        const savedTime = parseFloat(sessionStorage.getItem('bgMusicTime') || '0');
+        if (savedTime > 0) {
+            sound.currentTime = savedTime;
+        }
+        sound.volume = 0.85;
         sound.play().catch(e => { console.log('Phát nhạc bị chặn:', e); });
+
+        setInterval(() => {
+            if (!sound.paused) {
+                sessionStorage.setItem('bgMusicTime', sound.currentTime);
+            }
+        }, 300);
     }
 }
 

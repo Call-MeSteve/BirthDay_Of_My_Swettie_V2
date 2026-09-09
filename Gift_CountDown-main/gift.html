@@ -37,6 +37,7 @@
                 <div class="box-label">Quà 3</div>
             </div>
         </div>
+        <div class="gift-reminder-hint" id="giftReminderHint">✨ Pé hãy bấm mở hết cả 3 hộp quà để xem món quà bí mật cuối cùng nhé! 🎁</div>
     </header>
 
     <!-- GAMES SECTION -->
@@ -46,15 +47,18 @@
         <section class="game-card" id="gameB" data-game="0">
             <div class="card-badge">💝 Thử thách 1</div>
             <h2 class="card-title">Quiz Tình Yêu</h2>
-            <p class="card-desc">Trả lời đúng 3 câu hỏi về mối tình của chúng mình nhé! 💕</p>
+            <p class="card-desc">Trả lời đúng 4 câu hỏi về mối tình của chúng mình nhé! 💕</p>
 
             <div id="quizArea">
                 <div class="question-wrap" id="questionWrap">
-                    <div class="question-num" id="questionNum">Câu 1 / 3</div>
+                    <div class="question-num" id="questionNum">Câu 1 / 4</div>
                     <div class="question-text" id="questionText"></div>
                     <div class="question-hint" id="questionHint"></div>
-                    <input type="text" class="quiz-input" id="quizInput" placeholder="Nhập câu trả lời..." autocomplete="off">
-                    <button class="game-btn" id="quizBtn">Trả lời ✓</button>
+                    <div class="quiz-input-group" id="quizInputGroup">
+                        <input type="text" class="quiz-input" id="quizInput" placeholder="Nhập câu trả lời..." autocomplete="off">
+                        <button class="game-btn" id="quizBtn">Trả lời ✓</button>
+                    </div>
+                    <div class="quiz-options hidden" id="quizOptions"></div>
                     <p class="quiz-error" id="quizError"></p>
                 </div>
                 <div class="quiz-progress">
@@ -67,22 +71,46 @@
             </div>
         </section>
 
-        <!-- ===== GAME C: HEART PUZZLE ===== -->
+        <!-- ===== GAME C: HEART PUZZLE (JIGSAW PUZZLE) ===== -->
         <section class="game-card" id="gameC" data-game="1">
             <div class="card-badge" style="--badge-color:#ff6b9d">🧩 Thử thách 2</div>
-            <h2 class="card-title">Ghép Trái Tim</h2>
-            <p class="card-desc">Thu thập tất cả các mảnh ghép để hoàn chỉnh trái tim nhé! 💕</p>
+            <h2 class="card-title">Xếp Hình Trái Tim</h2>
+            <p class="card-desc">Kéo hoặc chạm vào các mảnh ghép bên dưới để lắp ráp thành trái tim hoàn chỉnh nhé! 💕</p>
 
             <div id="puzzleArea">
-                <div class="heart-target" id="heartTarget">
-                    <svg class="heart-outline" viewBox="0 0 100 90" width="140" height="130">
-                        <path d="M50 85 C50 85 5 55 5 25 C5 10 15 5 25 5 C35 5 45 12 50 20 C55 12 65 5 75 5 C85 5 95 10 95 25 C95 55 50 85 50 85Z"
-                              fill="none" stroke="rgba(255,107,157,0.4)" stroke-width="2" stroke-dasharray="4 3"/>
-                    </svg>
-                    <div class="heart-fill" id="heartFill"></div>
-                    <div class="heart-count" id="heartCount">0/8</div>
+                <!-- Heart Jigsaw Target Board -->
+                <div class="heart-jigsaw-container">
+                    <div class="heart-jigsaw-board" id="heartJigsawBoard">
+                        <div class="jigsaw-slot slot-tl" data-piece="0" id="slot-0">
+                            <span class="slot-num">1</span>
+                            <span class="slot-label">Thùy Trái</span>
+                        </div>
+                        <div class="jigsaw-slot slot-tr" data-piece="1" id="slot-1">
+                            <span class="slot-num">2</span>
+                            <span class="slot-label">Thùy Phải</span>
+                        </div>
+                        <div class="jigsaw-slot slot-bl" data-piece="2" id="slot-2">
+                            <span class="slot-num">3</span>
+                            <span class="slot-label">Cánh Trái</span>
+                        </div>
+                        <div class="jigsaw-slot slot-br" data-piece="3" id="slot-3">
+                            <span class="slot-num">4</span>
+                            <span class="slot-label">Đáy Tim</span>
+                        </div>
+                        <!-- Completed Heart Aura -->
+                        <div class="heart-completed-glow" id="heartCompletedGlow">
+                            <div class="glow-icon">💖</div>
+                            <div class="glow-sparkles">✨</div>
+                        </div>
+                    </div>
+                    <div class="heart-count" id="heartCount">Đã ghép: 0/4 mảnh</div>
                 </div>
-                <div class="pieces-container" id="piecesContainer"></div>
+
+                <p class="jigsaw-guide" id="jigsawGuide">💡 Chạm mảnh ghép bên dưới rồi chạm ô tương ứng (hoặc kéo thả)</p>
+
+                <!-- Tray containing draggable/clickable pieces -->
+                <div class="jigsaw-tray" id="jigsawTray"></div>
+
                 <div class="piece-progress">
                     <div class="progress-bar"><div class="progress-fill pink" id="pieceProgress"></div></div>
                 </div>
@@ -127,18 +155,37 @@
         </section>
     </main>
 
-    <!-- FINAL CELEBRATION (all games done) -->
+    <!-- FINAL CELEBRATION (Bức Thư Tình Đặc Biệt) -->
     <div class="final-overlay hidden" id="finalOverlay">
         <canvas id="finalCanvas"></canvas>
-        <div class="final-content">
-            <div class="final-emoji">🎂</div>
-            <h2 class="final-title">Happy Birthday<br>Pé Thúi Yêu!</h2>
-            <p class="final-msg">
-                Chúc pé iu của anh mau ăn chóng lớn 🌱<br>
-                Tuổi mới nhiều money 💵💸💰<br>
-                Luôn luôn hạnh phúc và xinh đẹp 🌸<br>
-                <strong>Anh yêu em rất nhiều! ❤️</strong>
-            </p>
+        <div class="letter-container" id="letterContainer">
+            <div class="letter-envelope-decor">💌 BỨC THƯ ĐẶC BIỆT DÀNH CHO EM 💌</div>
+            <div class="letter-paper">
+                <div class="letter-seal">💖</div>
+                <div class="letter-header">
+                    <h2 class="letter-title">Thư Gửi Pé Thúi Yêu Của Anh 🎂❤️</h2>
+                    <p class="letter-date">Hà Nội, ngày 07 tháng 10 năm 2026</p>
+                </div>
+                <div class="letter-divider">🌸 ✨ 🌸</div>
+                <div class="letter-body">
+                    <p class="letter-salutation">Pé Thúi yêu thương nhất của anh,</p>
+                    <p>Chúc mừng sinh nhật pé iu tròn 22 tuổi! Chúc em tuổi mới luôn tràn ngập nụ cười hạnh phúc, mãi xinh đẹp rạng ngời, mau ăn chóng lớn 🌱 và kiếm được thật nhiều money 💵💸💰 nha!</p>
+                    <p>Cảm ơn em đã luôn ở bên, mang lại cho anh những ngày tháng ngọt ngào và ấm áp nhất. Anh mong rằng chúng mình sẽ cùng nhau đón thật nhiều sinh nhật nữa nhé! ❤️</p>
+                    
+                    <!-- Dòng cam kết quà đặc biệt theo yêu cầu -->
+                    <div class="delivery-notice-box">
+                        <span class="delivery-icon">📦✨</span>
+                        <p class="delivery-text">
+                            <strong>Tất cả các phần quà trên sẽ được chuyển đến quý khách vào tối ngày 7/10/2026 !!😉</strong>
+                        </p>
+                    </div>
+                </div>
+                <div class="letter-footer">
+                    <p class="closing-phrase">Yêu em,</p>
+                    <p class="signature-name">Anh yêu của em 😘!!!</p>
+                </div>
+            </div>
+            <button class="letter-close-btn" onclick="closeLetter()">Đọc lại lần nữa 💖</button>
         </div>
     </div>
 
@@ -147,13 +194,13 @@
         <div class="modal-backdrop" onclick="closeModal()"></div>
         <div class="modal-box">
             <button class="modal-close" onclick="closeModal()">✕</button>
-            <div class="modal-ribbon">🎀</div>
+            <div class="modal-badge" id="modalBadge">🎁 Quà tặng 1</div>
             <h3 class="modal-title" id="modalTitle">🎁 Quà của em!</h3>
             <div class="modal-img-wrap" id="modalImgWrap">
                 <!-- Gift image will appear here -->
                 <div class="gift-placeholder" id="giftPlaceholder">
                     <div class="placeholder-icon">🎁</div>
-                    <p>Hình ảnh quà sẽ hiện ở đây<br><em>(Anh sẽ thêm ảnh sau nhé! 💕)</em></p>
+                    <p>Hình ảnh quà sẽ hiện ở đây</p>
                 </div>
             </div>
             <p class="modal-msg" id="modalMsg"></p>

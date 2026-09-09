@@ -53,6 +53,14 @@
         </div>
     </div>
 
+    <!-- Master Background Music (Chăm Hoa.mp3) -->
+    <audio id="masterAudio" loop preload="auto">
+        <source src="./style/Chăm Hoa.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Seamless Flow Frame for zero-interruption transitions -->
+    <iframe id="flowFrame" allow="fullscreen; autoplay" src="about:blank" style="display:none; position:fixed; inset:0; width:100%; height:100%; border:none; z-index:99999; opacity:0; transition:opacity 0.8s ease;"></iframe>
+
     <script src="./style/script/puzzle.js"></script>
 </body>
 </html>
