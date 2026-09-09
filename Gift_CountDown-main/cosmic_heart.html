@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic 3D Heart Planet</title>
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #000; }
+        canvas { display: block; }
+    </style>
+    <!-- Import Three.js via ES Modules -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+</head>
+<body>
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+        import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+        import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+
+        // 1. Scene Setup
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x050510, 0.002);
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 8, 35);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.toneMapping = THREE.ReinhardToneMapping;
+        document.body.appendChild(renderer.domElement);
+
+        // 2. Post-processing (Bloom Effect)
+        const renderScene = new RenderPass(scene, camera);
+        const bloomPass = new UnrealBloomPass(
+            new THREE.Vector2(window.innerWidth, window.innerHeight),
+            2.5,   // Cường độ phát sáng mạnh hơn
+            0.8,   // Bán kính phát sáng rộng hơn để hào quang mượt mà
+            0.15   // Ngưỡng sáng
+        );
+        const composer = new EffectComposer(renderer);
+        composer.addPass(renderScene);
+        composer.addPass(bloomPass);
+
+        // 3. Cosmic Galaxy Background (Stars)
+        const starsGeo = new THREE.BufferGeometry();
+        const starsCount = 2000;
+        const posArray = new Float32Array(starsCount * 3);
+        for(let i = 0; i < starsCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 200;
+        }
+        starsGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const starsMat = new THREE.PointsMaterial({
+            size: 0.2,
+            color: 0xffffff,
+            transparent: true,
+            opacity: 0.8
+        });
+        const starsMesh = new THREE.Points(starsGeo, starsMat);
+        scene.add(starsMesh);
+
+        // 4. Khối trái tim chuẩn toán học (Taubin 3D Heart Surface)
+        const baseRadius = 1;
+        const heartGeo = new THREE.SphereGeometry(baseRadius, 200, 200); // Tăng lưới để bề mặt cực kỳ mượt
+        const pos = heartGeo.attributes.position;
+        
+        for (let i = 0; i < pos.count; i++) {
+            let vx = pos.getX(i);
+            let vy = pos.getY(i);
+            let vz = pos.getZ(i);
+            
+            // Công thức mặt ẩn (Implicit Surface) của trái tim Taubin:
+            // (x^2 + 9/4 z^2 + y^2 - 1)^3 - x^2 y^3 - 9/80 z^2 y^3 = 0
+            
+            let A = vx*vx + (9.0/4.0)*vz*vz + vy*vy;
+            let B = vy*vy*vy * (vx*vx + (9.0/80.0)*vz*vz);
+            
+            // Giải phương trình tìm bán kính r bằng phương pháp chia đôi (Bisection)
+            let r0 = 0.0;
+            let r1 = 3.0; // Khoảng giới hạn chứa bề mặt
+            let r = 1.0;
+            
+            for(let iter = 0; iter < 40; iter++) {
+                r = (r0 + r1) / 2.0;
+                let r2 = r * r;
+                let term = A * r2 - 1.0;
+                let val = term * term * term - B * r2 * r2 * r;
+                if (val > 0) {
+                    r1 = r; // Nghiệm nằm ở nửa dưới
+                } else {
+                    r0 = r; // Nghiệm nằm ở nửa trên
+                }
+            }
+            
+            const scaleSize = 5.0; 
+            pos.setXYZ(i, vx * r * scaleSize, vy * r * scaleSize, vz * r * scaleSize);
+        }
+        heartGeo.translate(0, 0, 0); 
+        heartGeo.computeVertexNormals(); // Cập nhật bóng đổ cho đường cong mượt mà
+
+        // 5. Glowing Red Material (Căng mọng như ngọc)
+        const heartMat = new THREE.MeshStandardMaterial({ 
+            color: 0xff0022,
+            emissive: 0xaa0011,
+            emissiveIntensity: 0.8,
+            roughness: 0.25, // Giảm độ sắc của vết bóng
+            metalness: 0.2
+        });
+        const heartGroup = new THREE.Group();
+        const heartPlanet = new THREE.Mesh(heartGeo, heartMat);
+        heartGroup.add(heartPlanet);
+        scene.add(heartGroup);
+
+        // 6. Vành đai đĩa Neon (Saturn Ring)
+        const ringGroup = new THREE.Group();
+        const ringGeo = new THREE.TorusGeometry(8.5, 0.12, 16, 120);
+        const ringMat = new THREE.MeshStandardMaterial({
+            color: 0xff00ff,
+            emissive: 0xff00ff,
+            emissiveIntensity: 2.0,
+            transparent: true,
+            opacity: 0.9
+        });
+        const neonRing = new THREE.Mesh(ringGeo, ringMat);
+        neonRing.rotation.x = Math.PI / 2; // Đặt nằm ngang
+        ringGroup.add(neonRing);
+        
+        // Đưa đĩa vào tâm trái tim và nghiêng 20 độ để tạo độ sâu 3D
+        ringGroup.position.set(0, 0, 0); 
+        ringGroup.rotation.x = THREE.MathUtils.degToRad(20);
+        ringGroup.rotation.z = THREE.MathUtils.degToRad(-15);
+        
+        heartGroup.add(ringGroup); // Gắn vành đĩa vào cùng group của trái tim để cùng lơ lửng
+
+        // 7. Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+        scene.add(ambientLight);
+        
+        const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
+        dirLight.position.set(15, 20, 20);
+        scene.add(dirLight);
+
+        // 8. Orbit Controls
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+
+        // 9. Resize Handler
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // 10. Animation Loop
+        const clock = new THREE.Clock();
+        function animate() {
+            requestAnimationFrame(animate);
+            const elapsedTime = clock.getElapsedTime();
+
+            // Trái tim và vành đĩa cùng lơ lửng nhịp nhàng
+            heartGroup.position.y = Math.sin(elapsedTime * 2.0) * 0.8;
+            
+            // Xoay nhẹ trái tim
+            heartPlanet.rotation.y = elapsedTime * 0.4;
+            // Vành đĩa tự xoay quanh chính nó (trên mặt phẳng ngang của nó)
+            neonRing.rotation.z = -elapsedTime * 0.5;
+            
+            // Từ từ xoay vũ trụ
+            starsMesh.rotation.y = elapsedTime * 0.05;
+
+            controls.update();
+            composer.render();
+        }
+        animate();
+    </script>
+</body>
+</html>

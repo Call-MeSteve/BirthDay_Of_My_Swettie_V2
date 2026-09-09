@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎁 Chọn Quà Sinh Nhật!</title>
+    <meta name="description" content="Hoàn thành thử thách để nhận quà sinh nhật đặc biệt!">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style/gift.css">
+</head>
+<body>
+    <!-- BACKGROUND MUSIC -->
+    <audio id="giftMusic" loop preload="auto">
+        <source src="./style/Chăm Hoa.mp3" type="audio/mpeg">
+    </audio>
+
+    <canvas id="bgCanvas"></canvas>
+
+    <!-- HEADER -->
+    <header class="site-header">
+        <h1 class="header-title">🎁 Chọn Quà Sinh Nhật 🎁</h1>
+        <p class="header-sub">Hoàn thành cả 3 thử thách để mở quà nhé Pé Thúi! ❤️</p>
+
+        <!-- Gift boxes (locked until game completed) -->
+        <div class="gift-boxes" id="giftBoxes">
+            <div class="gift-box locked" id="giftBox0" data-game="0">
+                <div class="box-icon">🔒</div>
+                <div class="box-label">Quà 1</div>
+            </div>
+            <div class="gift-box locked" id="giftBox1" data-game="1">
+                <div class="box-icon">🔒</div>
+                <div class="box-label">Quà 2</div>
+            </div>
+            <div class="gift-box locked" id="giftBox2" data-game="2">
+                <div class="box-icon">🔒</div>
+                <div class="box-label">Quà 3</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- GAMES SECTION -->
+    <main class="games-grid">
+
+        <!-- ===== GAME B: QUIZ ===== -->
+        <section class="game-card" id="gameB" data-game="0">
+            <div class="card-badge">💝 Thử thách 1</div>
+            <h2 class="card-title">Quiz Tình Yêu</h2>
+            <p class="card-desc">Trả lời đúng 3 câu hỏi về mối tình của chúng mình nhé! 💕</p>
+
+            <div id="quizArea">
+                <div class="question-wrap" id="questionWrap">
+                    <div class="question-num" id="questionNum">Câu 1 / 3</div>
+                    <div class="question-text" id="questionText"></div>
+                    <div class="question-hint" id="questionHint"></div>
+                    <input type="text" class="quiz-input" id="quizInput" placeholder="Nhập câu trả lời..." autocomplete="off">
+                    <button class="game-btn" id="quizBtn">Trả lời ✓</button>
+                    <p class="quiz-error" id="quizError"></p>
+                </div>
+                <div class="quiz-progress">
+                    <div class="progress-bar"><div class="progress-fill" id="quizProgress"></div></div>
+                </div>
+            </div>
+            <div class="game-success hidden" id="quizSuccess">
+                <div class="success-anim">🎉</div>
+                <p>Giỏi quá Pé Thúi! Mở hộp quà nào!</p>
+            </div>
+        </section>
+
+        <!-- ===== GAME C: HEART PUZZLE ===== -->
+        <section class="game-card" id="gameC" data-game="1">
+            <div class="card-badge" style="--badge-color:#ff6b9d">🧩 Thử thách 2</div>
+            <h2 class="card-title">Ghép Trái Tim</h2>
+            <p class="card-desc">Thu thập tất cả các mảnh ghép để hoàn chỉnh trái tim nhé! 💕</p>
+
+            <div id="puzzleArea">
+                <div class="heart-target" id="heartTarget">
+                    <svg class="heart-outline" viewBox="0 0 100 90" width="140" height="130">
+                        <path d="M50 85 C50 85 5 55 5 25 C5 10 15 5 25 5 C35 5 45 12 50 20 C55 12 65 5 75 5 C85 5 95 10 95 25 C95 55 50 85 50 85Z"
+                              fill="none" stroke="rgba(255,107,157,0.4)" stroke-width="2" stroke-dasharray="4 3"/>
+                    </svg>
+                    <div class="heart-fill" id="heartFill"></div>
+                    <div class="heart-count" id="heartCount">0/8</div>
+                </div>
+                <div class="pieces-container" id="piecesContainer"></div>
+                <div class="piece-progress">
+                    <div class="progress-bar"><div class="progress-fill pink" id="pieceProgress"></div></div>
+                </div>
+            </div>
+            <div class="game-success hidden" id="puzzleSuccess">
+                <div class="success-anim">💖</div>
+                <p>Trái tim đã hoàn chỉnh! Em thật tuyệt! 🌸</p>
+            </div>
+        </section>
+
+        <!-- ===== GAME D: SECRET CODE ===== -->
+        <section class="game-card" id="gameD" data-game="2">
+            <div class="card-badge" style="--badge-color:#00c9b1">🔐 Thử thách 3</div>
+            <h2 class="card-title">Giải Mã Mật Thư</h2>
+            <p class="card-desc">Anh đã mã hóa một bí mật ngọt ngào cho em. Hãy giải mã nhé! 🔑</p>
+
+            <div id="codeArea">
+                <div class="cipher-box">
+                    <div class="cipher-title">📜 Mật thư bí ẩn:</div>
+                    <div class="cipher-message" id="cipherMessage">🍋 🌺 🎵 ❤️</div>
+                    <div class="cipher-hint-toggle" onclick="toggleCipherHint()">💡 Xem bảng giải mã</div>
+                    <div class="cipher-table" id="cipherTable">
+                        <table>
+                            <tr><th>Ký hiệu</th><th>Chữ cái</th><th>Ký hiệu</th><th>Chữ cái</th></tr>
+                            <tr><td>🍋</td><td>L</td><td>🌺</td><td>O</td></tr>
+                            <tr><td>🎵</td><td>V</td><td>❤️</td><td>E</td></tr>
+                            <tr><td>💙</td><td>I</td><td>🎈</td><td>B</td></tr>
+                            <tr><td>🌹</td><td>R</td><td>🎯</td><td>T/H</td></tr>
+                            <tr><td>🌊</td><td>D</td><td>🍎</td><td>A</td></tr>
+                            <tr><td>💛</td><td>Y</td><td>🌸</td><td>U/N</td></tr>
+                        </table>
+                    </div>
+                </div>
+                <input type="text" class="quiz-input" id="codeInput" placeholder="Nhập từ giải mã..." autocomplete="off" maxlength="20">
+                <button class="game-btn teal" id="codeBtn">Giải mã ✓</button>
+                <p class="quiz-error" id="codeError"></p>
+            </div>
+            <div class="game-success hidden" id="codeSuccess">
+                <div class="success-anim">🔓</div>
+                <p>Xuất sắc! Em đã giải mã được bí mật của anh! 💕</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- FINAL CELEBRATION (all games done) -->
+    <div class="final-overlay hidden" id="finalOverlay">
+        <canvas id="finalCanvas"></canvas>
+        <div class="final-content">
+            <div class="final-emoji">🎂</div>
+            <h2 class="final-title">Happy Birthday<br>Pé Thúi Yêu!</h2>
+            <p class="final-msg">
+                Chúc pé iu của anh mau ăn chóng lớn 🌱<br>
+                Tuổi mới nhiều money 💵💸💰<br>
+                Luôn luôn hạnh phúc và xinh đẹp 🌸<br>
+                <strong>Anh yêu em rất nhiều! ❤️</strong>
+            </p>
+        </div>
+    </div>
+
+    <!-- GIFT MODAL -->
+    <div class="gift-modal hidden" id="giftModal">
+        <div class="modal-backdrop" onclick="closeModal()"></div>
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeModal()">✕</button>
+            <div class="modal-ribbon">🎀</div>
+            <h3 class="modal-title" id="modalTitle">🎁 Quà của em!</h3>
+            <div class="modal-img-wrap" id="modalImgWrap">
+                <!-- Gift image will appear here -->
+                <div class="gift-placeholder" id="giftPlaceholder">
+                    <div class="placeholder-icon">🎁</div>
+                    <p>Hình ảnh quà sẽ hiện ở đây<br><em>(Anh sẽ thêm ảnh sau nhé! 💕)</em></p>
+                </div>
+            </div>
+            <p class="modal-msg" id="modalMsg"></p>
+        </div>
+    </div>
+
+    <script src="./style/script/gift.js"></script>
+</body>
+</html>

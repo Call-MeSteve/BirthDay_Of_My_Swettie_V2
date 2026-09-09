@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Galaxy Effect</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #000;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        #info {
+            position: absolute;
+            top: 10px;
+            width: 100%;
+            text-align: center;
+            color: white;
+            font-family: sans-serif;
+            pointer-events: none;
+            z-index: 100;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="info">Dùng chuột để xoay, lăn chuột để thu phóng</div>
+
+    <!-- Nạp thư viện Three.js từ CDN -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        // Post-processing để làm hiệu ứng phát sáng (Neon/Bloom)
+        import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+        import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+        import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+
+        // 1. KHỞI TẠO SCENE, CAMERA, RENDERER
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x000000, 0.001); // Tạo sương mù vũ trụ
+
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 30, 80);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        document.body.appendChild(renderer.domElement);
+
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true; // Xoay mượt mà hơn
+
+        // 2. SETUP HIỆU ỨNG GLOW (BLOOM)
+        const renderScene = new RenderPass(scene, camera);
+        const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
+        bloomPass.threshold = 0;
+        bloomPass.strength = 1.2; // Độ sáng chói
+        bloomPass.radius = 0.5;
+
+        const composer = new EffectComposer(renderer);
+        composer.addPass(renderScene);
+        composer.addPass(bloomPass);
+
+        // THÊM ÁNH SÁNG (Để thấy độ bóng của vật thể 3D)
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+        
+        const dirLight = new THREE.DirectionalLight(0xffffff, 2.0);
+        dirLight.position.set(20, 30, 20);
+        scene.add(dirLight);
+
+        // 3. TẠO HÀNH TINH TRÁI TIM 3D CHUẨN TOÁN HỌC (Taubin Heart Surface)
+        const baseRadius = 1; 
+        const heartGeo = new THREE.SphereGeometry(baseRadius, 200, 200); // Lưới siêu mịn
+        const pos = heartGeo.attributes.position;
+        
+        for (let i = 0; i < pos.count; i++) {
+            let vx = pos.getX(i);
+            let vy = pos.getY(i);
+            let vz = pos.getZ(i);
+            
+            // Công thức mặt ẩn (Implicit Surface) của trái tim Taubin:
+            // (x^2 + 9/4 z^2 + y^2 - 1)^3 - x^2 y^3 - 9/80 z^2 y^3 = 0
+            let A = vx*vx + (9.0/4.0)*vz*vz + vy*vy;
+            let B = vy*vy*vy * (vx*vx + (9.0/80.0)*vz*vz);
+            
+            // Dùng phương pháp chia đôi (Bisection) tìm r
+            let r0 = 0.0;
+            let r1 = 3.0;
+            let r = 1.0;
+            for(let iter = 0; iter < 40; iter++) {
+                r = (r0 + r1) / 2.0;
+                let r2 = r * r;
+                let term = A * r2 - 1.0;
+                let val = term * term * term - B * r2 * r2 * r;
+                if (val > 0) {
+                    r1 = r; 
+                } else {
+                    r0 = r; 
+                }
+            }
+            
+            // Điều chỉnh tỷ lệ để trái tim cân đối hơn (ngắn Y, rộng X và dày Z)
+            // Giúp phần đuôi bớt nhọn hoắt và 2 thùy đầy đặn hơn
+            const scaleX = 5.5; 
+            const scaleY = 4.5; 
+            const scaleZ = 5.0; 
+            
+            pos.setXYZ(i, vx * r * scaleX, vy * r * scaleY, vz * r * scaleZ);
+        }
+        heartGeo.translate(0, 0, 0); // Đặt tâm chuẩn xác ở 0,0,0
+        heartGeo.computeVertexNormals();
+
+        // 4. Chất liệu bóng bẩy, căng mọng (Ngọc/Thủy tinh mịn)
+        const heartMat = new THREE.MeshStandardMaterial({ 
+            color: 0xff0022,
+            emissive: 0xaa0011,
+            emissiveIntensity: 0.8,
+            roughness: 0.25,       // Giảm độ nhám để mượt mà, không bị bóng gắt
+            metalness: 0.2
+        });
+        
+        const heartGroup = new THREE.Group();
+        const heartPlanet = new THREE.Mesh(heartGeo, heartMat);
+        heartGroup.add(heartPlanet);
+        scene.add(heartGroup);
+
+        // Vành đai đĩa Neon (Saturn Ring)
+        const ringGroup = new THREE.Group();
+        const ringGeo = new THREE.TorusGeometry(8.5, 0.15, 16, 120);
+        const ringMat = new THREE.MeshStandardMaterial({
+            color: 0xff00ff,
+            emissive: 0xff00ff,
+            emissiveIntensity: 2.0,
+            transparent: true,
+            opacity: 0.9
+        });
+        const ring = new THREE.Mesh(ringGeo, ringMat); // Đặt tên là ring để animation chạy đúng
+        ring.rotation.x = Math.PI / 2; // Đặt nằm ngang
+        ringGroup.add(ring);
+        
+        // Đưa đĩa vào tâm trái tim và nghiêng để tạo chiều sâu
+        ringGroup.position.set(0, 0, 0); 
+        ringGroup.rotation.x = THREE.MathUtils.degToRad(20);
+        ringGroup.rotation.z = THREE.MathUtils.degToRad(-15);
+        
+        heartGroup.add(ringGroup); // Gắn đĩa vào trái tim để chúng có thể trôi nổi cùng nhau
+
+        // 4. TẠO CÁC VÌ SAO (PARTICLES)
+        const starGeo = new THREE.BufferGeometry();
+        const starCount = 3000;
+        const starPos = new Float32Array(starCount * 3);
+
+        for (let i = 0; i < starCount * 3; i++) {
+            // Rải sao ngẫu nhiên trong khoảng -200 đến 200
+            starPos[i] = (Math.random() - 0.5) * 400;
+        }
+        starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+        const starMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.5 });
+        const stars = new THREE.Points(starGeo, starMat);
+        scene.add(stars);
+
+        // 5. TẠO CÁC BỨC ẢNH BAY LƠ LỬNG TRÊN QUỸ ĐẠO
+        const cards = [];
+        const cardCount = 15;
+        const radius = 35; // Khoảng cách từ ảnh tới hành tinh
+
+        // Dùng tạm ảnh mẫu, bạn có thể thay bằng link ảnh của bạn
+        const textureLoader = new THREE.TextureLoader();
+        const placeholderImg = "https://picsum.photos/400/500";
+
+        for (let i = 0; i < cardCount; i++) {
+            const angle = (i / cardCount) * Math.PI * 2;
+
+            const cardGeo = new THREE.PlaneGeometry(8, 10); // Kích thước ảnh
+            const cardMat = new THREE.MeshBasicMaterial({
+                map: textureLoader.load(placeholderImg + "?random=" + i),
+                side: THREE.DoubleSide
+            });
+            const card = new THREE.Mesh(cardGeo, cardMat);
+
+            // Tính toán vị trí theo vòng tròn (Lượng giác)
+            card.position.x = Math.cos(angle) * radius;
+            card.position.z = Math.sin(angle) * radius;
+            // Cho vị trí Y nhấp nhô một chút
+            card.position.y = (Math.random() - 0.5) * 15;
+
+            // Lưu lại góc ban đầu để tạo animation
+            card.userData = { angle: angle, speed: 0.002 + Math.random() * 0.002 };
+
+            scene.add(card);
+            cards.push(card);
+        }
+
+        // Xử lý khi đổi kích thước cửa sổ
+        window.addEventListener('resize', onWindowResize, false);
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        // 6. VÒNG LẶP RENDER & ANIMATION
+        const clock = new THREE.Clock();
+        function animate() {
+            requestAnimationFrame(animate);
+            const elapsedTime = clock.getElapsedTime();
+
+            // Xoay dải ngân hà từ từ
+            stars.rotation.y -= 0.0005;
+            
+            // Xoay vành đĩa (ring là mesh bên trong group nên sẽ tự xoay quanh nó)
+            ring.rotation.z -= 0.005;
+            
+            // Trái tim tự xoay tròn từ từ
+            heartPlanet.rotation.y += 0.01; 
+            
+            // Cả cụm trái tim (bao gồm vành đĩa) trôi nổi nhịp nhàng lên xuống
+            heartGroup.position.y = Math.sin(elapsedTime * 2.0) * 0.8;
+
+            // Di chuyển các bức ảnh quanh quỹ đạo
+            cards.forEach(card => {
+                card.userData.angle += card.userData.speed;
+                card.position.x = Math.cos(card.userData.angle) * radius;
+                card.position.z = Math.sin(card.userData.angle) * radius;
+
+                // Quan trọng: Làm cho bức ảnh luôn xoay mặt về phía camera (Billboarding)
+                card.lookAt(camera.position);
+            });
+
+            controls.update(); // Cập nhật OrbitControls
+
+            // Dùng composer để render thay vì renderer bình thường (để lấy hiệu ứng sáng)
+            composer.render();
+        }
+
+        animate();
+    </script>
+</body>
+
+</html>
