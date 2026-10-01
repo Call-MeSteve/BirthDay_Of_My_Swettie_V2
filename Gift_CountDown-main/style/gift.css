@@ -768,7 +768,8 @@ svg.lucide {
     border-radius: 0;
     -webkit-clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 82% 90%, 65% 78%, 48% 65%, 32% 50%, 18% 34%, 8% 18%);
     clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 82% 90%, 65% 78%, 48% 65%, 32% 50%, 18% 34%, 8% 18%);
-    padding: 6px 8px 18px 20px;
+    padding: 8px 8px 30px 24px;
+    justify-content: flex-start;
 }
 
 /* Mảnh 4 (Cánh Phải): Vát cong chữ V ôm sát đường nét đứt, chóp nhọn góc trong tại đáy tim */
@@ -780,28 +781,31 @@ svg.lucide {
     border-radius: 0;
     -webkit-clip-path: polygon(0% 0%, 100% 0%, 92% 18%, 82% 34%, 68% 50%, 52% 65%, 35% 78%, 18% 90%, 0% 100%);
     clip-path: polygon(0% 0%, 100% 0%, 92% 18%, 82% 34%, 68% 50%, 52% 65%, 35% 78%, 18% 90%, 0% 100%);
-    padding: 6px 20px 18px 8px;
+    padding: 8px 24px 30px 8px;
+    justify-content: flex-start;
 }
 
 .jigsaw-slot .slot-icon {
-    width: 22px;
-    height: 22px;
-    stroke-width: 1.75px;
-    color: rgba(255, 214, 10, 0.8);
+    width: 24px;
+    height: 24px;
+    stroke-width: 2px;
+    color: #ffd60a;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 2px;
+    margin-bottom: 3px;
     transition: all 0.3s ease;
+    filter: drop-shadow(0 0 6px rgba(255, 214, 10, 0.7));
 }
 
 .jigsaw-slot .slot-label {
-    font-size: 0.72rem;
-    font-weight: 700;
-    color: rgba(255, 215, 230, 0.85);
-    letter-spacing: 0.3px;
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: 0.4px;
     text-align: center;
-    line-height: 1.2;
+    line-height: 1.25;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9), 0 0 8px rgba(0, 0, 0, 0.7);
 }
 
 .jigsaw-slot:hover:not(.placed) {
@@ -839,10 +843,11 @@ svg.lucide {
 }
 
 .jigsaw-slot.placed .placed-label {
-    font-size: 0.72rem;
-    font-weight: 700;
+    font-size: 0.82rem;
+    font-weight: 800;
     color: #ffffff;
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+    letter-spacing: 0.4px;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9), 0 0 8px rgba(0, 0, 0, 0.7);
 }
 
 @keyframes snapPop {
@@ -980,10 +985,11 @@ svg.lucide {
 }
 
 .piece-text {
-    font-size: 0.72rem;
-    color: rgba(255, 215, 230, 0.85);
-    font-weight: 600;
-    letter-spacing: 0.3px;
+    font-size: 0.8rem;
+    color: #ffffff;
+    font-weight: 800;
+    letter-spacing: 0.4px;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
 }
 
 .jigsaw-piece:hover:not(.used) {
