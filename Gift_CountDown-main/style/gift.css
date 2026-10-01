@@ -656,22 +656,24 @@ svg.lucide {
     border-radius: 52px 52px 14px 0;
 }
 
-/* Mảnh 3 (Cánh Trái): Góc dưới-trái, mép dưới góc trong chụm nhọn ôm đáy tim */
+/* Mảnh 3 (Cánh Trái): Góc dưới-trái ôm sát đường nét đứt, mép dưới góc trong chụm nhọn tại đáy tim */
 .jigsaw-slot.slot-2 {
     top: 99px;
     left: 14px;
     width: 105px;
     height: 97px;
-    border-radius: 4px 0 0 54px;
+    border-radius: 0 0 0 100%;
+    padding: 8px 6px 14px 14px;
 }
 
-/* Mảnh 4 (Cánh Phải): Góc dưới-phải, mép dưới góc trong chụm nhọn ôm đáy tim */
+/* Mảnh 4 (Cánh Phải): Góc dưới-phải ôm sát đường nét đứt, mép dưới góc trong chụm nhọn tại đáy tim */
 .jigsaw-slot.slot-3 {
     top: 99px;
     left: 121px;
     width: 105px;
     height: 97px;
-    border-radius: 0 4px 54px 0;
+    border-radius: 0 0 100% 0;
+    padding: 8px 14px 14px 6px;
 }
 
 .jigsaw-slot .slot-icon {
@@ -823,8 +825,8 @@ svg.lucide {
 /* Shapes corresponding to interlocking pieces: Chụm nhọn ôm đáy */
 .piece-visual.shape-0 { border-radius: 22px 22px 0 6px; }
 .piece-visual.shape-1 { border-radius: 22px 22px 6px 0; }
-.piece-visual.shape-2 { border-radius: 4px 0 0 22px; }
-.piece-visual.shape-3 { border-radius: 0 4px 22px 0; }
+.piece-visual.shape-2 { border-radius: 0 0 0 100%; }
+.piece-visual.shape-3 { border-radius: 0 0 100% 0; }
 
 .piece-icon svg {
     width: 18px;
