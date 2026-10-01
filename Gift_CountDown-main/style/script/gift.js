@@ -514,9 +514,9 @@ const GIFT_DATA = [
     },
     {
         badge:   "🎁 PHẦN QUÀ 2",
-        title:   "Tặng pé Thúi chiếc tai nghe xinh xắn nè 🎵💕",
+        title:   "Nhớ đừng làm mất nữa nghen 😉",
         imgSrc:  "./images/gift04.png",
-        message: "Tặng pé Thúi chiếc tai nghe xinh xắn nè 🎵💕"
+        message: "Nhớ đừng làm mất nữa nghen 😉"
     },
     {
         badge:   "🎁 PHẦN QUÀ 3",
