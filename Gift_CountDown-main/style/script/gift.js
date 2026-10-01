@@ -486,7 +486,7 @@ function finishHeartPuzzle() {
         if (success) success.classList.remove('hidden');
         if (window.lucide) lucide.createIcons();
         markGameComplete(1);
-    }, 1200);
+    }, 1600);
 }
 
 // ===================================================
