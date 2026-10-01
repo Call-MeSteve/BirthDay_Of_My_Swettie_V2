@@ -6,7 +6,7 @@
     <title>Chọn Quà Sinh Nhật</title>
     <meta name="description" content="Hoàn thành thử thách để nhận quà sinh nhật đặc biệt!">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Nunito:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Great+Vibes&family=Nunito:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./style/gift.css">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -106,22 +106,32 @@
                 <!-- Heart Jigsaw Target Board -->
                 <div class="heart-jigsaw-container">
                     <div class="heart-jigsaw-board" id="heartJigsawBoard">
-                        <div class="jigsaw-slot slot-tl" data-piece="0" id="slot-0">
-                            <span class="slot-num">1</span>
+                        <!-- True Heart Contour Silhouette Background -->
+                        <div class="heart-silhouette-backdrop">
+                            <svg viewBox="0 0 240 210" class="heart-contour-svg" aria-hidden="true">
+                                <path d="M 120 195 C 40 145, 10 95, 10 50 C 10 18, 38 2, 70 2 C 95 2, 112 18, 120 34 C 128 18, 145 2, 170 2 C 202 2, 230 18, 230 50 C 230 95, 200 145, 120 195 Z" 
+                                      class="heart-contour-path" />
+                            </svg>
+                        </div>
+
+                        <!-- 4 Anatomical Interlocking Slots -->
+                        <div class="jigsaw-slot slot-0" data-piece="0" id="slot-0" title="Thùy Trái">
+                            <i data-lucide="heart-pulse" class="slot-icon"></i>
                             <span class="slot-label">Thùy Trái</span>
                         </div>
-                        <div class="jigsaw-slot slot-tr" data-piece="1" id="slot-1">
-                            <span class="slot-num">2</span>
+                        <div class="jigsaw-slot slot-1" data-piece="1" id="slot-1" title="Thùy Phải">
+                            <i data-lucide="git-branch" class="slot-icon"></i>
                             <span class="slot-label">Thùy Phải</span>
                         </div>
-                        <div class="jigsaw-slot slot-bl" data-piece="2" id="slot-2">
-                            <span class="slot-num">3</span>
+                        <div class="jigsaw-slot slot-2" data-piece="2" id="slot-2" title="Cánh Trái">
+                            <i data-lucide="feather" class="slot-icon"></i>
                             <span class="slot-label">Cánh Trái</span>
                         </div>
-                        <div class="jigsaw-slot slot-br" data-piece="3" id="slot-3">
-                            <span class="slot-num">4</span>
+                        <div class="jigsaw-slot slot-3" data-piece="3" id="slot-3" title="Đáy Tim">
+                            <i data-lucide="navigation" class="slot-icon"></i>
                             <span class="slot-label">Đáy Tim</span>
                         </div>
+
                         <!-- Completed Heart Aura -->
                         <div class="heart-completed-glow" id="heartCompletedGlow">
                             <div class="glow-icon"><i data-lucide="heart"></i></div>
@@ -131,10 +141,7 @@
                     <div class="heart-count" id="heartCount">Đã ghép: 0/4 mảnh</div>
                 </div>
 
-                <p class="jigsaw-guide" id="jigsawGuide">
-                    <i data-lucide="mouse-pointer-click" class="guide-icon"></i>
-                    <span>Chạm mảnh ghép bên dưới rồi chọn vị trí tương ứng (hoặc kéo thả)</span>
-                </p>
+                <p class="jigsaw-guide" id="jigsawGuide">Chạm hoặc kéo các mảnh ghép để lắp ráp thành trái tim hoàn chỉnh. Từng mảnh là một kỷ niệm...</p>
 
                 <!-- Tray containing draggable/clickable pieces -->
                 <div class="jigsaw-tray" id="jigsawTray"></div>

@@ -153,26 +153,26 @@ function markGameComplete(index) {
 const QUIZ_QUESTIONS = [
     {
         type:     "text",
-        question: "Em sinh ngày tháng năm nào? 🎂",
+        question: "Em sinh ngày tháng năm nào?",
         hint:     "Gợi ý: ngày / tháng / năm",
         answers:  ["07/10/2004","7/10/2004","07/10","7/10","07102004","7102004"]
     },
     {
         type:     "text",
-        question: "Anh thường hay gọi em là gì? 💕",
+        question: "Anh thường hay gọi em là gì?",
         hint:     "Gợi ý: cái tên yêu thương nhất...",
         answers:  ["pé thúi","pe thui","linh thúi","linh thui","pé","pe"]
     },
     {
         type:     "text",
-        question: "Năm nay em bước sang tuổi mấy? 🎈",
+        question: "Năm nay em bước sang tuổi mấy?",
         hint:     "Gợi ý: 2026 - 2004 = ?",
         answers:  ["22","hai mươi hai","twenty two","tuổi 22"]
     },
     {
         type:     "choice",
-        question: "Ngày đầu tiên 2 đứa mình gặp nhau là ở đâu? ✈️",
-        hint:     "Gợi ý: Chọn một đáp án đúng nhất nhé! 😉",
+        question: "Ngày đầu tiên 2 đứa mình gặp nhau là ở đâu?",
+        hint:     "Gợi ý: Chọn một đáp án đúng nhất nhé.",
         options:  [
             { key: "A", text: "Ở trường" },
             { key: "B", text: "Sân Bay" },
@@ -299,7 +299,7 @@ function checkQuiz() {
         input.classList.remove('shake');
         void input.offsetWidth;
         input.classList.add('shake');
-        document.getElementById('quizError').textContent = '💔 Sai rồi... thử lại nhé em!';
+        document.getElementById('quizError').textContent = 'Chưa chính xác... Em thử lại nhé!';
         setTimeout(() => input.classList.remove('shake'), 500);
     }
 }
@@ -308,10 +308,10 @@ function checkQuiz() {
 // GAME C — HEART JIGSAW PUZZLE (Thử thách xếp hình trái tim)
 // ===================================================
 const JIGSAW_PIECES = [
-    { id: 0, title: "Mảnh 1", label: "Thùy Trái", icon: "🌸", color: "linear-gradient(135deg, #ff758f, #ff4d6d)" },
-    { id: 1, title: "Mảnh 2", label: "Thùy Phải", icon: "✨", color: "linear-gradient(135deg, #ffd166, #ff758f)" },
-    { id: 2, title: "Mảnh 3", label: "Cánh Trái", icon: "💖", color: "linear-gradient(135deg, #c9184a, #ff4d6d)" },
-    { id: 3, title: "Mảnh 4", label: "Đáy Tim",   icon: "💝", color: "linear-gradient(135deg, #ff4d6d, #ffd60a)" }
+    { id: 0, title: "Mảnh 1", label: "Thùy Trái", iconName: "heart-pulse", color: "linear-gradient(135deg, rgba(230, 100, 130, 0.9), rgba(200, 50, 90, 0.95))" },
+    { id: 1, title: "Mảnh 2", label: "Thùy Phải", iconName: "git-branch",  color: "linear-gradient(135deg, rgba(240, 140, 130, 0.9), rgba(215, 80, 110, 0.95))" },
+    { id: 2, title: "Mảnh 3", label: "Cánh Trái", iconName: "feather",     color: "linear-gradient(135deg, rgba(190, 45, 85, 0.9), rgba(155, 28, 65, 0.95))" },
+    { id: 3, title: "Mảnh 4", label: "Đáy Tim",   iconName: "navigation",  color: "linear-gradient(135deg, rgba(212, 175, 55, 0.9), rgba(201, 24, 74, 0.95))" }
 ];
 
 const placedPieces = [false, false, false, false];
@@ -332,8 +332,8 @@ function initPuzzle() {
         pieceEl.draggable = true;
         pieceEl.dataset.pieceId = item.id;
         pieceEl.innerHTML = `
-            <div class="piece-visual" style="background: ${item.color};">
-                <span class="piece-icon">${item.icon}</span>
+            <div class="piece-visual shape-${item.id}" style="background: ${item.color};">
+                <span class="piece-icon"><i data-lucide="${item.iconName}"></i></span>
                 <span class="piece-num">${item.id + 1}</span>
             </div>
             <span class="piece-text">${item.label}</span>
@@ -370,7 +370,7 @@ function initPuzzle() {
             if (selectedPieceId !== null) {
                 tryPlacePiece(selectedPieceId, slotId);
             } else {
-                showJigsawHint("👆 Hãy chọn một mảnh ghép ở khay bên dưới trước nhé!");
+                showJigsawHint("Hãy chọn một mảnh ghép ở khay bên dưới trước nhé.");
             }
         });
 
@@ -395,6 +395,10 @@ function initPuzzle() {
         });
     }
 
+    if (window.lucide) {
+        lucide.createIcons();
+    }
+
     updateJigsawProgress();
 }
 
@@ -409,7 +413,7 @@ function selectJigsawPiece(id) {
     const selectedEl = document.getElementById(`piece-btn-${id}`);
     if (selectedEl) selectedEl.classList.add('selected');
 
-    showJigsawHint(`Đang chọn "${JIGSAW_PIECES[id].label}" 👉 Hãy chạm vào ô số ${id + 1} trên trái tim!`);
+    showJigsawHint(`Đang chọn "${JIGSAW_PIECES[id].label}" — Hãy chạm vào vị trí khớp trên trái tim.`);
 }
 
 function tryPlacePiece(pieceId, slotId) {
@@ -422,9 +426,10 @@ function tryPlacePiece(pieceId, slotId) {
         slotEl.classList.add('placed');
         slotEl.style.background = JIGSAW_PIECES[pieceId].color;
         slotEl.innerHTML = `
-            <span class="placed-icon">${JIGSAW_PIECES[pieceId].icon}</span>
+            <span class="placed-icon"><i data-lucide="${JIGSAW_PIECES[pieceId].iconName}"></i></span>
             <span class="placed-label">${JIGSAW_PIECES[pieceId].label}</span>
         `;
+        if (window.lucide) lucide.createIcons();
 
         if (pieceEl) {
             pieceEl.classList.remove('selected');
@@ -432,7 +437,7 @@ function tryPlacePiece(pieceId, slotId) {
         }
 
         selectedPieceId = null;
-        showJigsawHint(`✅ Ghép đúng mảnh ${slotId + 1} rồi! Giỏi quá pé ơi! 💖`);
+        showJigsawHint(`Đã ghép hoàn hảo mảnh "${JIGSAW_PIECES[slotId].label}".`);
         updateJigsawProgress();
 
         // Check if all 4 pieces placed
@@ -447,7 +452,7 @@ function tryPlacePiece(pieceId, slotId) {
             slotEl.classList.add('shake');
             setTimeout(() => slotEl.classList.remove('shake'), 500);
         }
-        showJigsawHint(`💔 Ô số ${slotId + 1} không hợp với mảnh này... Thử ô số ${pieceId + 1} xem nhé!`);
+        showJigsawHint(`Mảnh này chưa khớp với ${JIGSAW_PIECES[slotId].label}. Em thử lại nhé.`);
     }
 }
 
@@ -535,28 +540,28 @@ function checkCode() {
 // ===================================================
 const GIFT_DATA = [
     {
-        badge:   "🎁 PHẦN QUÀ 1",
-        title:   "Sẽ Giúp cứu cánh pé Thúi vào những lúc cạn pin nè 😉",
+        badge:   "Phần Quà 1",
+        title:   "Sẽ giúp cứu cánh pé Thúi vào những lúc cạn pin nè",
         imgSrc:  "./images/gift01.png",
-        message: "Sẽ Giúp cứu cánh pé Thúi vào những lúc cạn pin nè 😉"
+        message: "Sẽ giúp cứu cánh pé Thúi vào những lúc cạn pin nè"
     },
     {
-        badge:   "🎁 PHẦN QUÀ 2",
-        title:   "Nhớ đừng làm mất nữa nghen 😉",
+        badge:   "Phần Quà 2",
+        title:   "Nhớ đừng làm mất nữa nghen",
         imgSrc:  "./images/gift04.png",
-        message: "Nhớ đừng làm mất nữa nghen 😉"
+        message: "Nhớ đừng làm mất nữa nghen"
     },
     {
-        badge:   "🎁 PHẦN QUÀ 3",
-        title:   "Tặng pé Thúi chiếc Túi đi chơi nè 💕",
+        badge:   "Phần Quà 3",
+        title:   "Tặng pé Thúi chiếc túi đi chơi nè",
         imgSrc:  "./images/gift03.png",
-        message: "Tặng pé Thúi chiếc Túi đi chơi nè 💕"
+        message: "Tặng pé Thúi chiếc túi đi chơi nè"
     },
     {
-        badge:   "👑 PHẦN QUÀ ĐẶC BIỆT",
-        title:   "Điều gì tốt hơn 1 cái túi 🤔 Đó là 2 cái túi nè 😘",
+        badge:   "Phần Quà Đặc Biệt",
+        title:   "Điều gì tốt hơn một chiếc túi? Đó là hai chiếc túi nè",
         imgSrc:  "./images/gift02.png",
-        message: "Điều gì tốt hơn 1 cái túi 🤔 Đó là 2 cái túi nè 😘"
+        message: "Điều gì tốt hơn một chiếc túi? Đó là hai chiếc túi nè"
     }
 ];
 
