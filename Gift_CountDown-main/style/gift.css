@@ -2,19 +2,27 @@
    gift.css — Part 4: Mini-Games Gift Selection
    =================================================== */
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-    --pink:    #ff6b9d;
-    --deep-pink: #c9184a;
-    --teal:    #00c9b1;
-    --purple:  #a855f7;
-    --gold:    #ffd60a;
-    --dark:    #07000f;
-    --card-bg: rgba(255,255,255,0.04);
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-html { scroll-behavior: smooth; }
+:root {
+    --pink: #ff6b9d;
+    --deep-pink: #c9184a;
+    --teal: #00c9b1;
+    --purple: #a855f7;
+    --gold: #ffd60a;
+    --dark: #07000f;
+    --card-bg: rgba(255, 255, 255, 0.04);
+}
+
+html {
+    scroll-behavior: smooth;
+}
 
 body {
     font-family: 'Nunito', sans-serif;
@@ -25,13 +33,16 @@ body {
 }
 
 #bgCanvas {
-    position: fixed; inset: 0;
-    pointer-events: none; z-index: 0;
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
 }
 
 /* ===== HEADER ===== */
 .site-header {
-    position: relative; z-index: 10;
+    position: relative;
+    z-index: 10;
     text-align: center;
     padding: 2rem 1rem 1rem;
 }
@@ -53,8 +64,13 @@ body {
 }
 
 @keyframes shimmer {
-    0%   { background-position: 0%; }
-    100% { background-position: 200%; }
+    0% {
+        background-position: 0%;
+    }
+
+    100% {
+        background-position: 200%;
+    }
 }
 
 .header-icon {
@@ -95,12 +111,15 @@ svg.lucide {
 }
 
 .gift-box {
-    width: 80px; height: 90px;
+    width: 80px;
+    height: 90px;
     border-radius: 14px;
     border: 2px solid rgba(255, 107, 157, 0.25);
-    background: rgba(255,255,255,0.04);
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
+    background: rgba(255, 255, 255, 0.04);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     gap: 4px;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -122,19 +141,33 @@ svg.lucide {
 }
 
 @keyframes giftPulse {
-    0%, 100% { transform: scale(1); box-shadow: 0 0 24px rgba(255,214,10,0.4); }
-    50%       { transform: scale(1.06); box-shadow: 0 0 40px rgba(255,214,10,0.65); }
+
+    0%,
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 24px rgba(255, 214, 10, 0.4);
+    }
+
+    50% {
+        transform: scale(1.06);
+        box-shadow: 0 0 40px rgba(255, 214, 10, 0.65);
+    }
 }
 
-.box-icon { font-size: 2rem; }
+.box-icon {
+    font-size: 2rem;
+}
+
 .box-label {
     font-size: 0.7rem;
     font-weight: 700;
     letter-spacing: 0.5px;
-    color: rgba(255,255,255,0.6);
+    color: rgba(255, 255, 255, 0.6);
 }
 
-.gift-box.unlocked .box-label { color: var(--gold); }
+.gift-box.unlocked .box-label {
+    color: var(--gold);
+}
 
 .gift-box.viewed {
     border-color: #ffd60a !important;
@@ -158,8 +191,13 @@ svg.lucide {
 }
 
 @keyframes crownFloat {
-    0% { transform: translateY(0) rotate(-6deg); }
-    100% { transform: translateY(-4px) rotate(8deg); }
+    0% {
+        transform: translateY(0) rotate(-6deg);
+    }
+
+    100% {
+        transform: translateY(-4px) rotate(8deg);
+    }
 }
 
 .gift-box.special-box.locked {
@@ -177,13 +215,20 @@ svg.lucide {
 }
 
 @keyframes specialPulse {
-    0%   { transform: scale(1.02); box-shadow: 0 0 25px rgba(255,214,10,0.6); }
-    100% { transform: scale(1.12); box-shadow: 0 0 50px rgba(255,214,10,0.9), 0 0 75px rgba(255,107,157,0.6); }
+    0% {
+        transform: scale(1.02);
+        box-shadow: 0 0 25px rgba(255, 214, 10, 0.6);
+    }
+
+    100% {
+        transform: scale(1.12);
+        box-shadow: 0 0 50px rgba(255, 214, 10, 0.9), 0 0 75px rgba(255, 107, 157, 0.6);
+    }
 }
 
 .gift-box.special-box.unlocked .box-label {
     color: #ffd60a;
-    text-shadow: 0 0 8px rgba(255,214,10,0.8);
+    text-shadow: 0 0 8px rgba(255, 214, 10, 0.8);
 }
 
 .gift-reminder-hint {
@@ -221,8 +266,17 @@ svg.lucide {
 }
 
 @keyframes reminderPulse {
-    0%, 100% { transform: scale(1); box-shadow: 0 0 15px rgba(255,214,10,0.3); }
-    50%      { transform: scale(1.04); box-shadow: 0 0 30px rgba(255,214,10,0.6); }
+
+    0%,
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 15px rgba(255, 214, 10, 0.3);
+    }
+
+    50% {
+        transform: scale(1.04);
+        box-shadow: 0 0 30px rgba(255, 214, 10, 0.6);
+    }
 }
 
 /* ===== GAMES GRID ===== */
@@ -233,7 +287,8 @@ svg.lucide {
     padding: 1rem 2rem 4rem;
     max-width: 1100px;
     margin: 0 auto;
-    position: relative; z-index: 10;
+    position: relative;
+    z-index: 10;
 }
 
 /* ===== GAME CARD (Glassmorphism) ===== */
@@ -258,19 +313,29 @@ svg.lucide {
 .game-card::before {
     content: '';
     position: absolute;
-    top: -60%; left: -40%;
-    width: 180%; height: 180%;
-    background: radial-gradient(circle, rgba(168,85,247,0.06) 0%, transparent 60%);
+    top: -60%;
+    left: -40%;
+    width: 180%;
+    height: 180%;
+    background: radial-gradient(circle, rgba(168, 85, 247, 0.06) 0%, transparent 60%);
     pointer-events: none;
 }
 
-.game-card[data-game="0"]::before { background: radial-gradient(circle, rgba(168,85,247,0.07) 0%, transparent 60%); }
-.game-card[data-game="1"]::before { background: radial-gradient(circle, rgba(255,107,157,0.07) 0%, transparent 60%); }
-.game-card[data-game="2"]::before { background: radial-gradient(circle, rgba(0,201,177,0.07) 0%, transparent 60%); }
+.game-card[data-game="0"]::before {
+    background: radial-gradient(circle, rgba(168, 85, 247, 0.07) 0%, transparent 60%);
+}
+
+.game-card[data-game="1"]::before {
+    background: radial-gradient(circle, rgba(255, 107, 157, 0.07) 0%, transparent 60%);
+}
+
+.game-card[data-game="2"]::before {
+    background: radial-gradient(circle, rgba(0, 201, 177, 0.07) 0%, transparent 60%);
+}
 
 .game-card.completed {
-    border-color: rgba(255,214,10,0.5);
-    box-shadow: 0 0 40px rgba(255,214,10,0.15);
+    border-color: rgba(255, 214, 10, 0.5);
+    box-shadow: 0 0 40px rgba(255, 214, 10, 0.15);
 }
 
 /* ===== CARD BADGE ===== */
@@ -295,8 +360,17 @@ svg.lucide {
     stroke-width: 2px;
 }
 
-.card-badge[style*="ff6b9d"] { background: rgba(255,107,157,0.15); border-color: rgba(255,107,157,0.35); color: #ffb3c6; }
-.card-badge[style*="00c9b1"] { background: rgba(0,201,177,0.15); border-color: rgba(0,201,177,0.35); color: #99f6e4; }
+.card-badge[style*="ff6b9d"] {
+    background: rgba(255, 107, 157, 0.15);
+    border-color: rgba(255, 107, 157, 0.35);
+    color: #ffb3c6;
+}
+
+.card-badge[style*="00c9b1"] {
+    background: rgba(0, 201, 177, 0.15);
+    border-color: rgba(0, 201, 177, 0.35);
+    color: #99f6e4;
+}
 
 .card-title {
     font-family: 'Dancing Script', cursive;
@@ -323,7 +397,7 @@ svg.lucide {
 
 .card-desc {
     font-size: 0.9rem;
-    color: rgba(255,200,220,0.7);
+    color: rgba(255, 200, 220, 0.7);
     margin-bottom: 1.5rem;
     line-height: 1.6;
     font-family: 'Nunito', sans-serif;
@@ -333,7 +407,7 @@ svg.lucide {
 .question-num {
     font-size: 0.8rem;
     font-weight: 700;
-    color: rgba(168,85,247,0.8);
+    color: rgba(168, 85, 247, 0.8);
     letter-spacing: 1px;
     margin-bottom: 0.6rem;
 }
@@ -348,7 +422,7 @@ svg.lucide {
 
 .question-hint {
     font-size: 0.8rem;
-    color: rgba(255,200,220,0.5);
+    color: rgba(255, 200, 220, 0.5);
     font-style: italic;
     margin-bottom: 1rem;
 }
@@ -356,8 +430,8 @@ svg.lucide {
 /* ===== INPUTS ===== */
 .quiz-input {
     width: 100%;
-    background: rgba(255,255,255,0.07);
-    border: 1.5px solid rgba(255,107,157,0.3);
+    background: rgba(255, 255, 255, 0.07);
+    border: 1.5px solid rgba(255, 107, 157, 0.3);
     border-radius: 12px;
     padding: 0.8rem 1rem;
     font-size: 1rem;
@@ -370,8 +444,8 @@ svg.lucide {
 
 .quiz-input:focus {
     border-color: var(--pink);
-    box-shadow: 0 0 0 3px rgba(255,107,157,0.15);
-    background: rgba(255,255,255,0.1);
+    box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.15);
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .quiz-input.shake {
@@ -380,11 +454,27 @@ svg.lucide {
 }
 
 @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    20%  { transform: translateX(-7px); }
-    40%  { transform: translateX(7px); }
-    60%  { transform: translateX(-4px); }
-    80%  { transform: translateX(4px); }
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    20% {
+        transform: translateX(-7px);
+    }
+
+    40% {
+        transform: translateX(7px);
+    }
+
+    60% {
+        transform: translateX(-4px);
+    }
+
+    80% {
+        transform: translateX(4px);
+    }
 }
 
 /* ===== BUTTONS ===== */
@@ -510,13 +600,18 @@ svg.lucide {
 }
 
 /* ===== PROGRESS BAR ===== */
-.quiz-progress, .piece-progress { margin-top: 1rem; }
+.quiz-progress,
+.piece-progress {
+    margin-top: 1rem;
+}
+
 .progress-bar {
     height: 6px;
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 3px;
     overflow: hidden;
 }
+
 .progress-fill {
     height: 100%;
     background: linear-gradient(90deg, #a855f7, #ff6b9d);
@@ -524,7 +619,10 @@ svg.lucide {
     width: 0%;
     transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-.progress-fill.pink { background: linear-gradient(90deg, #ff6b9d, #ffd60a); }
+
+.progress-fill.pink {
+    background: linear-gradient(90deg, #ff6b9d, #ffd60a);
+}
 
 /* ===== HEART JIGSAW PUZZLE (Authentic Anatomical Curve Silhouette) ===== */
 .heart-jigsaw-container {
@@ -566,17 +664,6 @@ svg.lucide {
     transition: all 0.5s ease;
 }
 
-.heart-divider-line {
-    stroke: rgba(224, 122, 151, 0.35);
-    stroke-width: 1.5;
-    stroke-dasharray: 4 4;
-    transition: all 0.5s ease;
-}
-
-.heart-jigsaw-board.completed .heart-divider-line {
-    opacity: 0;
-}
-
 .heart-jigsaw-board.completed {
     animation: heartCompleteUnifiedGlow 2s infinite alternate ease-in-out;
 }
@@ -585,6 +672,7 @@ svg.lucide {
     0% {
         filter: drop-shadow(0 0 14px rgba(224, 122, 151, 0.7)) drop-shadow(0 0 28px rgba(168, 85, 247, 0.45));
     }
+
     100% {
         filter: drop-shadow(0 0 24px rgba(224, 122, 151, 0.95)) drop-shadow(0 0 45px rgba(168, 85, 247, 0.75));
     }
@@ -620,8 +708,8 @@ svg.lucide {
     top: 98px;
     width: 106px;
     height: 98px;
-    -webkit-clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 85% 91%, 70% 80%, 55% 67%, 40% 52%, 26% 36%, 14% 22%, 5% 10%);
-    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 85% 91%, 70% 80%, 55% 67%, 40% 52%, 26% 36%, 14% 22%, 5% 10%);
+    -webkit-clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 82% 90%, 65% 78%, 48% 65%, 32% 50%, 18% 34%, 8% 18%);
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 82% 90%, 65% 78%, 48% 65%, 32% 50%, 18% 34%, 8% 18%);
 }
 
 .heart-jigsaw-board.completed .jigsaw-slot.slot-3 {
@@ -629,8 +717,8 @@ svg.lucide {
     left: 120px;
     width: 106px;
     height: 98px;
-    -webkit-clip-path: polygon(0% 0%, 100% 0%, 95% 10%, 86% 22%, 74% 36%, 60% 52%, 45% 67%, 30% 80%, 15% 91%, 0% 100%);
-    clip-path: polygon(0% 0%, 100% 0%, 95% 10%, 86% 22%, 74% 36%, 60% 52%, 45% 67%, 30% 80%, 15% 91%, 0% 100%);
+    -webkit-clip-path: polygon(0% 0%, 100% 0%, 92% 18%, 82% 34%, 68% 50%, 52% 65%, 35% 78%, 18% 90%, 0% 100%);
+    clip-path: polygon(0% 0%, 100% 0%, 92% 18%, 82% 34%, 68% 50%, 52% 65%, 35% 78%, 18% 90%, 0% 100%);
 }
 
 .jigsaw-slot {
@@ -678,8 +766,8 @@ svg.lucide {
     width: 105px;
     height: 97px;
     border-radius: 0;
-    -webkit-clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 85% 91%, 70% 80%, 55% 67%, 40% 52%, 26% 36%, 14% 22%, 5% 10%);
-    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 85% 91%, 70% 80%, 55% 67%, 40% 52%, 26% 36%, 14% 22%, 5% 10%);
+    -webkit-clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 82% 90%, 65% 78%, 48% 65%, 32% 50%, 18% 34%, 8% 18%);
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 82% 90%, 65% 78%, 48% 65%, 32% 50%, 18% 34%, 8% 18%);
     padding: 6px 8px 18px 20px;
 }
 
@@ -690,8 +778,8 @@ svg.lucide {
     width: 105px;
     height: 97px;
     border-radius: 0;
-    -webkit-clip-path: polygon(0% 0%, 100% 0%, 95% 10%, 86% 22%, 74% 36%, 60% 52%, 45% 67%, 30% 80%, 15% 91%, 0% 100%);
-    clip-path: polygon(0% 0%, 100% 0%, 95% 10%, 86% 22%, 74% 36%, 60% 52%, 45% 67%, 30% 80%, 15% 91%, 0% 100%);
+    -webkit-clip-path: polygon(0% 0%, 100% 0%, 92% 18%, 82% 34%, 68% 50%, 52% 65%, 35% 78%, 18% 90%, 0% 100%);
+    clip-path: polygon(0% 0%, 100% 0%, 92% 18%, 82% 34%, 68% 50%, 52% 65%, 35% 78%, 18% 90%, 0% 100%);
     padding: 6px 20px 18px 8px;
 }
 
@@ -754,13 +842,21 @@ svg.lucide {
     font-size: 0.72rem;
     font-weight: 700;
     color: #ffffff;
-    text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
 }
 
 @keyframes snapPop {
-    0%   { transform: scale(0.8); }
-    50%  { transform: scale(1.12); }
-    100% { transform: scale(1); }
+    0% {
+        transform: scale(0.8);
+    }
+
+    50% {
+        transform: scale(1.12);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }
 
 .heart-completed-glow {
@@ -787,8 +883,15 @@ svg.lucide {
 }
 
 @keyframes heartGlowPulse {
-    from { transform: scale(0.92); filter: drop-shadow(0 0 16px rgba(224, 122, 151, 0.8)) drop-shadow(0 0 25px rgba(168, 85, 247, 0.6)); }
-    to   { transform: scale(1.15); filter: drop-shadow(0 0 28px rgba(224, 122, 151, 1)) drop-shadow(0 0 50px rgba(168, 85, 247, 0.9)); }
+    from {
+        transform: scale(0.92);
+        filter: drop-shadow(0 0 16px rgba(224, 122, 151, 0.8)) drop-shadow(0 0 25px rgba(168, 85, 247, 0.6));
+    }
+
+    to {
+        transform: scale(1.15);
+        filter: drop-shadow(0 0 28px rgba(224, 122, 151, 1)) drop-shadow(0 0 50px rgba(168, 85, 247, 0.9));
+    }
 }
 
 .jigsaw-guide {
@@ -840,18 +943,25 @@ svg.lucide {
 }
 
 /* Shapes corresponding to interlocking pieces: Chụm nhọn ôm đáy */
-.piece-visual.shape-0 { border-radius: 22px 22px 0 6px; }
-.piece-visual.shape-1 { border-radius: 22px 22px 6px 0; }
+.piece-visual.shape-0 {
+    border-radius: 22px 22px 0 6px;
+}
+
+.piece-visual.shape-1 {
+    border-radius: 22px 22px 6px 0;
+}
+
 .piece-visual.shape-2 {
     border-radius: 0;
-    -webkit-clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 85% 91%, 70% 80%, 55% 67%, 40% 52%, 26% 36%, 14% 22%, 5% 10%);
-    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 85% 91%, 70% 80%, 55% 67%, 40% 52%, 26% 36%, 14% 22%, 5% 10%);
+    -webkit-clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 82% 90%, 65% 78%, 48% 65%, 32% 50%, 18% 34%, 8% 18%);
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 82% 90%, 65% 78%, 48% 65%, 32% 50%, 18% 34%, 8% 18%);
     padding-left: 8px;
 }
+
 .piece-visual.shape-3 {
     border-radius: 0;
-    -webkit-clip-path: polygon(0% 0%, 100% 0%, 95% 10%, 86% 22%, 74% 36%, 60% 52%, 45% 67%, 30% 80%, 15% 91%, 0% 100%);
-    clip-path: polygon(0% 0%, 100% 0%, 95% 10%, 86% 22%, 74% 36%, 60% 52%, 45% 67%, 30% 80%, 15% 91%, 0% 100%);
+    -webkit-clip-path: polygon(0% 0%, 100% 0%, 92% 18%, 82% 34%, 68% 50%, 52% 65%, 35% 78%, 18% 90%, 0% 100%);
+    clip-path: polygon(0% 0%, 100% 0%, 92% 18%, 82% 34%, 68% 50%, 52% 65%, 35% 78%, 18% 90%, 0% 100%);
     padding-right: 8px;
 }
 
@@ -982,7 +1092,9 @@ svg.lucide {
     overflow: hidden;
 }
 
-.cipher-table.visible { display: block; }
+.cipher-table.visible {
+    display: block;
+}
 
 .cipher-table table {
     width: 100%;
@@ -1021,7 +1133,10 @@ svg.lucide {
     text-align: center;
     padding: 1.5rem;
 }
-.game-success.hidden { display: none; }
+
+.game-success.hidden {
+    display: none;
+}
 
 .success-anim {
     display: flex;
@@ -1040,33 +1155,54 @@ svg.lucide {
 }
 
 @keyframes bounce {
-    from { transform: scale(0); opacity: 0; }
-    to   { transform: scale(1); opacity: 1; }
+    from {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
 .game-success p {
     font-size: 0.95rem;
-    color: rgba(255,200,220,0.85);
+    color: rgba(255, 200, 220, 0.85);
     font-style: italic;
 }
 
 /* ===== FINAL CELEBRATION ===== */
 .final-overlay {
-    position: fixed; inset: 0; z-index: 200;
-    display: flex; align-items: center; justify-content: center;
-    background: rgba(5,0,15,0.96);
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(5, 0, 15, 0.96);
     animation: fadeIn 0.8s ease;
 }
-.final-overlay.hidden { display: none; }
+
+.final-overlay.hidden {
+    display: none;
+}
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 #finalCanvas {
-    position: absolute; inset: 0;
-    width: 100%; height: 100%;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
 }
 
 /* ===== ROMANTIC LOVE LETTER FINAL CELEBRATION ===== */
@@ -1084,12 +1220,19 @@ svg.lucide {
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 26px;
     padding: 1rem;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
 }
 
 @keyframes letterFlyIn {
-    from { opacity: 0; transform: translateY(40px) scale(0.9); }
-    to   { opacity: 1; transform: translateY(0) scale(1); }
+    from {
+        opacity: 0;
+        transform: translateY(40px) scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 .letter-envelope-decor {
@@ -1295,22 +1438,31 @@ svg.lucide {
 
 /* ===== GIFT MODAL ===== */
 .gift-modal {
-    position: fixed; inset: 0; z-index: 300;
-    display: flex; align-items: center; justify-content: center;
+    position: fixed;
+    inset: 0;
+    z-index: 300;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding: 1rem;
 }
-.gift-modal.hidden { display: none; }
+
+.gift-modal.hidden {
+    display: none;
+}
 
 .modal-backdrop {
-    position: absolute; inset: 0;
-    background: rgba(0,0,0,0.75);
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
     backdrop-filter: blur(8px);
 }
 
 .modal-box {
-    position: relative; z-index: 10;
+    position: relative;
+    z-index: 10;
     background: radial-gradient(ellipse at 50% 0%, #1e003a, #0a0018);
-    border: 2px solid rgba(255,107,157,0.45);
+    border: 2px solid rgba(255, 107, 157, 0.45);
     border-radius: 26px;
     padding: 2rem 1.6rem 1.6rem;
     max-width: 440px;
@@ -1319,27 +1471,42 @@ svg.lucide {
     overflow-y: auto;
     text-align: center;
     box-shadow:
-        0 0 80px rgba(255,107,157,0.3),
-        inset 0 1px 0 rgba(255,255,255,0.1);
+        0 0 80px rgba(255, 107, 157, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
     animation: modalPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 @keyframes modalPop {
-    from { transform: scale(0.7); opacity: 0; }
-    to   { transform: scale(1); opacity: 1; }
+    from {
+        transform: scale(0.7);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
 .modal-close {
-    position: absolute; top: 16px; right: 16px;
-    background: rgba(255,255,255,0.08);
-    border: none; border-radius: 50%;
-    width: 32px; height: 32px;
-    color: rgba(255,255,255,0.6);
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: rgba(255, 255, 255, 0.08);
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    color: rgba(255, 255, 255, 0.6);
     font-size: 0.85rem;
     cursor: pointer;
     transition: all 0.2s ease;
 }
-.modal-close:hover { background: rgba(255,107,157,0.2); color: #fff; }
+
+.modal-close:hover {
+    background: rgba(255, 107, 157, 0.2);
+    color: #fff;
+}
 
 .modal-badge {
     display: inline-block;
@@ -1386,22 +1553,26 @@ svg.lucide {
     height: auto;
     object-fit: contain;
     border-radius: 12px;
-    border: 1.5px solid rgba(255,107,157,0.4);
-    box-shadow: 0 6px 25px rgba(0,0,0,0.6);
+    border: 1.5px solid rgba(255, 107, 157, 0.4);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.6);
     display: block;
     margin: 0 auto;
 }
 
 .gift-placeholder {
-    border: 2px dashed rgba(255,107,157,0.3);
+    border: 2px dashed rgba(255, 107, 157, 0.3);
     border-radius: 16px;
     padding: 2rem 1rem;
-    color: rgba(255,200,220,0.6);
+    color: rgba(255, 200, 220, 0.6);
     font-size: 0.9rem;
     font-style: italic;
     line-height: 1.8;
 }
-.placeholder-icon { font-size: 3rem; margin-bottom: 0.5rem; }
+
+.placeholder-icon {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
 
 .modal-msg {
     font-size: 1.05rem;
@@ -1417,10 +1588,18 @@ svg.lucide {
 }
 
 /* ===== HIDDEN UTILITY ===== */
-.hidden { display: none !important; }
+.hidden {
+    display: none !important;
+}
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 640px) {
-    .games-grid { padding: 1rem 1rem 4rem; gap: 1rem; }
-    .game-card  { padding: 1.5rem; }
+    .games-grid {
+        padding: 1rem 1rem 4rem;
+        gap: 1rem;
+    }
+
+    .game-card {
+        padding: 1.5rem;
+    }
 }

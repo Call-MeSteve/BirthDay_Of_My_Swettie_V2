@@ -1,18 +1,22 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chọn Quà Sinh Nhật</title>
     <meta name="description" content="Hoàn thành thử thách để nhận quà sinh nhật đặc biệt!">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Great+Vibes&family=Nunito:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Great+Vibes&family=Nunito:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,600;1,400&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="./style/gift.css">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Canvas Confetti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
+
 <body>
     <!-- BACKGROUND MUSIC -->
     <audio id="giftMusic" loop preload="auto">
@@ -44,7 +48,8 @@
                 <div class="box-icon"><i data-lucide="lock" class="lucide-icon"></i></div>
                 <div class="box-label">Quà 3</div>
             </div>
-            <div class="gift-box special-box locked" id="giftBoxSpecial" data-game="3" title="Hoàn thành cả 3 thử thách để mở khóa quà đặc biệt!">
+            <div class="gift-box special-box locked" id="giftBoxSpecial" data-game="3"
+                title="Hoàn thành cả 3 thử thách để mở khóa quà đặc biệt!">
                 <div class="special-crown"><i data-lucide="crown"></i></div>
                 <div class="box-icon"><i data-lucide="lock" class="lucide-icon"></i></div>
                 <div class="box-label">Quà Đặc Biệt</div>
@@ -74,7 +79,8 @@
                     <div class="question-text" id="questionText"></div>
                     <div class="question-hint" id="questionHint"></div>
                     <div class="quiz-input-group" id="quizInputGroup">
-                        <input type="text" class="quiz-input" id="quizInput" placeholder="Nhập câu trả lời..." autocomplete="off">
+                        <input type="text" class="quiz-input" id="quizInput" placeholder="Nhập câu trả lời..."
+                            autocomplete="off">
                         <button class="game-btn" id="quizBtn">
                             <span>Trả lời</span>
                             <i data-lucide="check" class="btn-icon"></i>
@@ -84,7 +90,9 @@
                     <p class="quiz-error" id="quizError"></p>
                 </div>
                 <div class="quiz-progress">
-                    <div class="progress-bar"><div class="progress-fill" id="quizProgress"></div></div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="quizProgress"></div>
+                    </div>
                 </div>
             </div>
             <div class="game-success hidden" id="quizSuccess">
@@ -109,8 +117,9 @@
                         <!-- True Heart Contour Silhouette Background -->
                         <div class="heart-silhouette-backdrop">
                             <svg viewBox="0 0 240 210" class="heart-contour-svg" aria-hidden="true">
-                                <path d="M 120 195 C 40 145, 10 95, 10 50 C 10 18, 38 2, 70 2 C 95 2, 112 18, 120 34 C 128 18, 145 2, 170 2 C 202 2, 230 18, 230 50 C 230 95, 200 145, 120 195 Z" 
-                                      class="heart-contour-path" />
+                                <path
+                                    d="M 120 195 C 40 145, 10 95, 10 50 C 10 18, 38 2, 70 2 C 95 2, 112 18, 120 34 C 128 18, 145 2, 170 2 C 202 2, 230 18, 230 50 C 230 95, 200 145, 120 195 Z"
+                                    class="heart-contour-path" />
                                 <line x1="120" y1="34" x2="120" y2="195" class="heart-divider-line" />
                                 <line x1="12" y1="99" x2="228" y2="99" class="heart-divider-line" />
                             </svg>
@@ -143,13 +152,16 @@
                     <div class="heart-count" id="heartCount">Đã ghép: 0/4 mảnh</div>
                 </div>
 
-                <p class="jigsaw-guide" id="jigsawGuide">Chạm hoặc kéo các mảnh ghép để lắp ráp thành trái tim hoàn chỉnh. Từng mảnh là một kỷ niệm...</p>
+                <p class="jigsaw-guide" id="jigsawGuide">Chạm hoặc kéo các mảnh ghép để lắp ráp thành trái tim hoàn
+                    chỉnh. Từng mảnh là một kỷ niệm...</p>
 
                 <!-- Tray containing draggable/clickable pieces -->
                 <div class="jigsaw-tray" id="jigsawTray"></div>
 
                 <div class="piece-progress">
-                    <div class="progress-bar"><div class="progress-fill pink" id="pieceProgress"></div></div>
+                    <div class="progress-bar">
+                        <div class="progress-fill pink" id="pieceProgress"></div>
+                    </div>
                 </div>
             </div>
             <div class="game-success hidden" id="puzzleSuccess">
@@ -182,21 +194,57 @@
                     <div class="cipher-table" id="cipherTable">
                         <table>
                             <thead>
-                                <tr><th>Ký hiệu</th><th>Chữ cái</th><th>Ký hiệu</th><th>Chữ cái</th></tr>
+                                <tr>
+                                    <th>Ký hiệu</th>
+                                    <th>Chữ cái</th>
+                                    <th>Ký hiệu</th>
+                                    <th>Chữ cái</th>
+                                </tr>
                             </thead>
                             <tbody>
-                                <tr><td>✦</td><td>L</td><td>◈</td><td>O</td></tr>
-                                <tr><td>▲</td><td>V</td><td>⟡</td><td>E</td></tr>
-                                <tr><td>◇</td><td>I</td><td>✧</td><td>B</td></tr>
-                                <tr><td>❖</td><td>R</td><td>⬖</td><td>T / H</td></tr>
-                                <tr><td>⬡</td><td>D</td><td>✶</td><td>A</td></tr>
-                                <tr><td>◬</td><td>Y</td><td>○</td><td>U / N</td></tr>
+                                <tr>
+                                    <td>✦</td>
+                                    <td>L</td>
+                                    <td>◈</td>
+                                    <td>O</td>
+                                </tr>
+                                <tr>
+                                    <td>▲</td>
+                                    <td>V</td>
+                                    <td>⟡</td>
+                                    <td>E</td>
+                                </tr>
+                                <tr>
+                                    <td>◇</td>
+                                    <td>I</td>
+                                    <td>✧</td>
+                                    <td>B</td>
+                                </tr>
+                                <tr>
+                                    <td>❖</td>
+                                    <td>R</td>
+                                    <td>⬖</td>
+                                    <td>T / H</td>
+                                </tr>
+                                <tr>
+                                    <td>⬡</td>
+                                    <td>D</td>
+                                    <td>✶</td>
+                                    <td>A</td>
+                                </tr>
+                                <tr>
+                                    <td>◬</td>
+                                    <td>Y</td>
+                                    <td>○</td>
+                                    <td>U / N</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
                 <div class="quiz-input-group">
-                    <input type="text" class="quiz-input" id="codeInput" placeholder="Nhập từ giải mã..." autocomplete="off" maxlength="20">
+                    <input type="text" class="quiz-input" id="codeInput" placeholder="Nhập từ giải mã..."
+                        autocomplete="off" maxlength="20">
                     <button class="game-btn teal" id="codeBtn">
                         <span>Giải mã</span>
                         <i data-lucide="unlock" class="btn-icon"></i>
@@ -232,14 +280,17 @@
                 </div>
                 <div class="letter-body">
                     <p class="letter-salutation">Pé Thúi yêu thương nhất của anh,</p>
-                    <p>Chúc mừng sinh nhật pé iu tròn 22 tuổi! Chúc em tuổi mới luôn tràn ngập nụ cười hạnh phúc, mãi xinh đẹp rạng ngời, mau ăn chóng lớn và gặt hái thật nhiều thành công nha!</p>
-                    <p>Cảm ơn em đã luôn ở bên, mang lại cho anh những ngày tháng ngọt ngào và ấm áp nhất. Anh mong rằng chúng mình sẽ cùng nhau đón thật nhiều sinh nhật nữa nhé!</p>
-                    
+                    <p>Chúc mừng sinh nhật pé iu tròn 22 tuổi! Chúc em tuổi mới luôn tràn ngập nụ cười hạnh phúc, mãi
+                        xinh đẹp rạng ngời, mau ăn chóng lớn và gặt hái thật nhiều thành công nha!</p>
+                    <p>Cảm ơn em đã luôn ở bên, mang lại cho anh những ngày tháng ngọt ngào và ấm áp nhất. Anh mong rằng
+                        chúng mình sẽ cùng nhau đón thật nhiều sinh nhật nữa nhé!</p>
+
                     <!-- Dòng cam kết quà đặc biệt theo yêu cầu -->
                     <div class="delivery-notice-box">
                         <span class="delivery-icon"><i data-lucide="package-check" class="delivery-lucide"></i></span>
                         <p class="delivery-text">
-                            <strong>Tất cả các phần quà trên sẽ được chuyển đến quý khách vào tối ngày 7/10/2026 !!</strong>
+                            <strong>Tất cả các phần quà trên sẽ được chuyển đến quý khách vào tối ngày 7/10/2026
+                                !!</strong>
                         </p>
                     </div>
                 </div>
@@ -274,4 +325,5 @@
 
     <script src="./style/script/gift.js"></script>
 </body>
+
 </html>
