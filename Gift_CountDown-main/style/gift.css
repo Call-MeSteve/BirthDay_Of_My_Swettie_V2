@@ -566,6 +566,17 @@ svg.lucide {
     transition: all 0.5s ease;
 }
 
+.heart-divider-line {
+    stroke: rgba(224, 122, 151, 0.35);
+    stroke-width: 1.5;
+    stroke-dasharray: 4 4;
+    transition: all 0.5s ease;
+}
+
+.heart-jigsaw-board.completed .heart-divider-line {
+    opacity: 0;
+}
+
 .heart-jigsaw-board.completed {
     animation: heartCompleteUnifiedGlow 2s infinite alternate ease-in-out;
 }
@@ -609,6 +620,7 @@ svg.lucide {
     top: 98px;
     width: 106px;
     height: 98px;
+    clip-path: path('M 0 0 L 106 0 L 106 97 C 50 70, 15 35, 0 0 Z');
 }
 
 .heart-jigsaw-board.completed .jigsaw-slot.slot-3 {
@@ -616,6 +628,7 @@ svg.lucide {
     left: 120px;
     width: 106px;
     height: 98px;
+    clip-path: path('M 0 0 L 106 0 C 91 35, 56 70, 0 97 Z');
 }
 
 .jigsaw-slot {
@@ -656,24 +669,28 @@ svg.lucide {
     border-radius: 52px 52px 14px 0;
 }
 
-/* Mảnh 3 (Cánh Trái): Góc dưới-trái ôm sát đường nét đứt, mép dưới góc trong chụm nhọn tại đáy tim */
+/* Mảnh 3 (Cánh Trái): Vát cong chữ V ôm sát đường nét đứt, chóp nhọn góc trong tại đáy tim */
 .jigsaw-slot.slot-2 {
     top: 99px;
     left: 14px;
     width: 105px;
     height: 97px;
-    border-radius: 0 0 0 100%;
-    padding: 8px 6px 14px 14px;
+    border-radius: 0;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 65% 82%, 35% 55%, 15% 30%, 0 0);
+    clip-path: path('M 0 0 L 105 0 L 105 96 C 50 70, 15 35, 0 0 Z');
+    padding: 6px 8px 18px 20px;
 }
 
-/* Mảnh 4 (Cánh Phải): Góc dưới-phải ôm sát đường nét đứt, mép dưới góc trong chụm nhọn tại đáy tim */
+/* Mảnh 4 (Cánh Phải): Vát cong chữ V ôm sát đường nét đứt, chóp nhọn góc trong tại đáy tim */
 .jigsaw-slot.slot-3 {
     top: 99px;
     left: 121px;
     width: 105px;
     height: 97px;
-    border-radius: 0 0 100% 0;
-    padding: 8px 14px 14px 6px;
+    border-radius: 0;
+    clip-path: polygon(0 0, 100% 0, 85% 30%, 65% 55%, 35% 82%, 0 100%);
+    clip-path: path('M 0 0 L 105 0 C 90 35, 55 70, 0 96 Z');
+    padding: 6px 20px 18px 8px;
 }
 
 .jigsaw-slot .slot-icon {
@@ -825,8 +842,18 @@ svg.lucide {
 /* Shapes corresponding to interlocking pieces: Chụm nhọn ôm đáy */
 .piece-visual.shape-0 { border-radius: 22px 22px 0 6px; }
 .piece-visual.shape-1 { border-radius: 22px 22px 6px 0; }
-.piece-visual.shape-2 { border-radius: 0 0 0 100%; }
-.piece-visual.shape-3 { border-radius: 0 0 100% 0; }
+.piece-visual.shape-2 {
+    border-radius: 0;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 65% 82%, 35% 55%, 15% 30%, 0 0);
+    clip-path: path('M 0 0 L 66 0 L 66 55 C 31 40, 9 20, 0 0 Z');
+    padding-left: 8px;
+}
+.piece-visual.shape-3 {
+    border-radius: 0;
+    clip-path: polygon(0 0, 100% 0, 85% 30%, 65% 55%, 35% 82%, 0 100%);
+    clip-path: path('M 0 0 L 66 0 C 57 20, 35 40, 0 55 Z');
+    padding-right: 8px;
+}
 
 .piece-icon svg {
     width: 18px;
