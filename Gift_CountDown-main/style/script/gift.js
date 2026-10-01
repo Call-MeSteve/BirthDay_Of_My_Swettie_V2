@@ -59,21 +59,38 @@ drawBg();
 // STATE & TRACKING (Require all 3 gifts to be opened)
 // ===================================================
 const gameCompleted = [false, false, false]; // 0=Quiz, 1=Heart Jigsaw, 2=Code
-const openedGifts   = new Set();             // Must contain 0, 1, 2 to trigger final letter
+const openedGifts   = new Set();             // Must contain 0, 1, 2, 3 to trigger final letter
 
 function updateGiftReminder() {
     const hint = document.getElementById('giftReminderHint');
     if (!hint) return;
 
     if (gameCompleted.every(Boolean)) {
-        if (openedGifts.size < 3) {
-            hint.textContent = `✨ Pé đã hoàn thành thử thách! Đã mở ${openedGifts.size}/3 hộp quà. Hãy mở nốt để xem bức thư bí mật nhé! 🎁`;
+        if (openedGifts.size < 4) {
+            hint.textContent = `👑 Xuất sắc! Pé đã vượt qua cả 3 vòng (Đã mở ${openedGifts.size}/4 quà). Hãy mở nốt phần quà đặc biệt để xem thư bí mật nhé! 🎁✨`;
             hint.classList.add('visible');
             hint.classList.add('pulse');
         } else {
-            hint.textContent = `🎉 Pé đã mở hết quà rồi! Mời em đón đọc bức thư tình yêu nhé! 💕`;
+            hint.textContent = `🎉 Pé đã mở hết tất cả quà rồi! Mời em đón đọc bức thư tình yêu nhé! 💕`;
             hint.classList.add('visible');
             hint.classList.remove('pulse');
+        }
+    }
+}
+
+function unlockSpecialGift() {
+    const specialBox = document.getElementById('giftBoxSpecial');
+    if (specialBox && specialBox.classList.contains('locked')) {
+        specialBox.classList.remove('locked');
+        specialBox.classList.add('unlocked');
+        specialBox.querySelector('.box-icon').textContent = '🎁';
+        specialBox.title = 'Bấm để mở PHẦN QUÀ ĐẶC BIỆT! 👑';
+        specialBox.onclick = () => openGiftModal(3);
+
+        const hint = document.getElementById('giftReminderHint');
+        if (hint) {
+            hint.textContent = `👑 WOW! Pé Thúi đã xuất sắc hoàn thành cả 3 thử thách! PHẦN QUÀ ĐẶC BIỆT ĐÃ MỞ KHÓA! 🎁✨`;
+            hint.classList.add('visible', 'pulse');
         }
     }
 }
@@ -96,10 +113,15 @@ function markGameComplete(index) {
         box.addEventListener('click', () => openGiftModal(index));
     }
 
+    // When all 3 games are completed -> Unlock Special Gift (gift02)
+    if (gameCompleted.every(Boolean)) {
+        unlockSpecialGift();
+    }
+
     updateGiftReminder();
 
-    // If all games completed AND all 3 already opened
-    if (gameCompleted.every(Boolean) && openedGifts.size === 3) {
+    // If all games completed AND all 4 gifts already opened
+    if (gameCompleted.every(Boolean) && openedGifts.size === 4) {
         setTimeout(showFinalCelebration, 800);
     }
 }
@@ -492,14 +514,20 @@ const GIFT_DATA = [
     },
     {
         badge:   "🎁 PHẦN QUÀ 2",
-        title:   "Tặng pé Thúi chiếc Túi đi chơi nè 💕",
-        imgSrc:  "./images/gift02.png",
-        message: "Tặng pé Thúi chiếc Túi đi chơi nè 💕"
+        title:   "Tặng pé Thúi chiếc tai nghe xinh xắn nè 🎵💕",
+        imgSrc:  "./images/gift04.png",
+        message: "Tặng pé Thúi chiếc tai nghe xinh xắn nè 🎵💕"
     },
     {
         badge:   "🎁 PHẦN QUÀ 3",
-        title:   "Điều gì tốt hơn 1 cái túi 🤔 Đó là 2 cái túi nè 😘",
+        title:   "Tặng pé Thúi chiếc Túi đi chơi nè 💕",
         imgSrc:  "./images/gift03.png",
+        message: "Tặng pé Thúi chiếc Túi đi chơi nè 💕"
+    },
+    {
+        badge:   "👑 PHẦN QUÀ ĐẶC BIỆT",
+        title:   "Điều gì tốt hơn 1 cái túi 🤔 Đó là 2 cái túi nè 😘",
+        imgSrc:  "./images/gift02.png",
         message: "Điều gì tốt hơn 1 cái túi 🤔 Đó là 2 cái túi nè 😘"
     }
 ];
@@ -510,7 +538,7 @@ function openGiftModal(index) {
 
     // Track that user opened this gift!
     openedGifts.add(index);
-    const box = document.getElementById(`giftBox${index}`);
+    const box = index === 3 ? document.getElementById('giftBoxSpecial') : document.getElementById(`giftBox${index}`);
     if (box) box.classList.add('viewed');
 
     const badgeEl = document.getElementById('modalBadge');
@@ -546,8 +574,8 @@ function closeModal() {
     document.getElementById('giftModal').classList.add('hidden');
     updateGiftReminder();
 
-    // RULE: If all 3 games are completed AND player has opened all 3 gifts -> Show Final Celebration Letter!
-    if (gameCompleted.every(Boolean) && openedGifts.size === 3) {
+    // RULE: If all 3 games are completed AND player has opened all 4 gifts -> Show Final Celebration Letter!
+    if (gameCompleted.every(Boolean) && openedGifts.size === 4) {
         setTimeout(showFinalCelebration, 600);
     }
 }
@@ -651,4 +679,26 @@ window.addEventListener('DOMContentLoaded', () => {
     initQuiz();
     initPuzzle();
     initCode();
+
+    // Friendly click feedback when clicking locked boxes
+    document.querySelectorAll('.gift-box').forEach(box => {
+        box.addEventListener('click', () => {
+            if (box.classList.contains('locked')) {
+                box.classList.remove('shake');
+                void box.offsetWidth;
+                box.classList.add('shake');
+                setTimeout(() => box.classList.remove('shake'), 500);
+                const hint = document.getElementById('giftReminderHint');
+                if (hint) {
+                    if (box.id === 'giftBoxSpecial') {
+                        hint.textContent = '🔒 Pé hãy vượt qua cả 3 thử thách bên dưới để mở khóa phần quà đặc biệt này nhé! 👑🎁';
+                    } else {
+                        const gameNum = parseInt(box.dataset.game) + 1;
+                        hint.textContent = `🔒 Pé hãy vượt qua Thử thách ${gameNum} bên dưới để mở hộp quà này nhé! 💕`;
+                    }
+                    hint.classList.add('visible', 'pulse');
+                }
+            }
+        });
+    });
 });
