@@ -311,7 +311,7 @@ const JIGSAW_PIECES = [
     { id: 0, title: "Mảnh 1", label: "Thùy Trái", iconName: "heart-pulse", color: "linear-gradient(135deg, rgba(230, 100, 130, 0.9), rgba(200, 50, 90, 0.95))" },
     { id: 1, title: "Mảnh 2", label: "Thùy Phải", iconName: "git-branch",  color: "linear-gradient(135deg, rgba(240, 140, 130, 0.9), rgba(215, 80, 110, 0.95))" },
     { id: 2, title: "Mảnh 3", label: "Cánh Trái", iconName: "feather",     color: "linear-gradient(135deg, rgba(190, 45, 85, 0.9), rgba(155, 28, 65, 0.95))" },
-    { id: 3, title: "Mảnh 4", label: "Đáy Tim",   iconName: "navigation",  color: "linear-gradient(135deg, rgba(212, 175, 55, 0.9), rgba(201, 24, 74, 0.95))" }
+    { id: 3, title: "Mảnh 4", label: "Cánh Phải", iconName: "navigation",  color: "linear-gradient(135deg, rgba(212, 175, 55, 0.9), rgba(201, 24, 74, 0.95))" }
 ];
 
 const placedPieces = [false, false, false, false];
