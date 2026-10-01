@@ -3,11 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎁 Chọn Quà Sinh Nhật!</title>
+    <title>Chọn Quà Sinh Nhật</title>
     <meta name="description" content="Hoàn thành thử thách để nhận quà sinh nhật đặc biệt!">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Nunito:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./style/gift.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
     <!-- BACKGROUND MUSIC -->
@@ -19,30 +23,37 @@
 
     <!-- HEADER -->
     <header class="site-header">
-        <h1 class="header-title">🎁 Chọn Quà Sinh Nhật 🎁</h1>
-        <p class="header-sub">Hoàn thành cả 3 thử thách để mở quà nhé Pé Thúi! ❤️</p>
+        <h1 class="header-title">
+            <i data-lucide="gift" class="header-icon"></i>
+            Chọn Quà Sinh Nhật
+            <i data-lucide="sparkles" class="header-icon"></i>
+        </h1>
+        <p class="header-sub">Hoàn thành cả 3 thử thách để mở trọn bộ quà tặng nhé Pé Thúi!</p>
 
         <!-- Gift boxes (locked until game completed) -->
         <div class="gift-boxes" id="giftBoxes">
             <div class="gift-box locked" id="giftBox0" data-game="0">
-                <div class="box-icon">🔒</div>
+                <div class="box-icon"><i data-lucide="lock" class="lucide-icon"></i></div>
                 <div class="box-label">Quà 1</div>
             </div>
             <div class="gift-box locked" id="giftBox1" data-game="1">
-                <div class="box-icon">🔒</div>
+                <div class="box-icon"><i data-lucide="lock" class="lucide-icon"></i></div>
                 <div class="box-label">Quà 2</div>
             </div>
             <div class="gift-box locked" id="giftBox2" data-game="2">
-                <div class="box-icon">🔒</div>
+                <div class="box-icon"><i data-lucide="lock" class="lucide-icon"></i></div>
                 <div class="box-label">Quà 3</div>
             </div>
             <div class="gift-box special-box locked" id="giftBoxSpecial" data-game="3" title="Hoàn thành cả 3 thử thách để mở khóa quà đặc biệt!">
-                <div class="special-crown">👑</div>
-                <div class="box-icon">🔒</div>
+                <div class="special-crown"><i data-lucide="crown"></i></div>
+                <div class="box-icon"><i data-lucide="lock" class="lucide-icon"></i></div>
                 <div class="box-label">Quà Đặc Biệt</div>
             </div>
         </div>
-        <div class="gift-reminder-hint" id="giftReminderHint">✨ Pé hãy bấm mở hết tất cả các hộp quà để xem món quà bí mật cuối cùng nhé! 🎁</div>
+        <div class="gift-reminder-hint" id="giftReminderHint">
+            <i data-lucide="sparkles" class="hint-icon"></i>
+            <span>Pé hãy bấm mở hết tất cả các hộp quà để xem bức thư bí mật cuối cùng nhé!</span>
+        </div>
     </header>
 
     <!-- GAMES SECTION -->
@@ -50,9 +61,12 @@
 
         <!-- ===== GAME B: QUIZ ===== -->
         <section class="game-card" id="gameB" data-game="0">
-            <div class="card-badge">💝 Thử thách 1</div>
+            <div class="card-badge">
+                <i data-lucide="heart" class="badge-icon"></i>
+                <span>Thử thách 1</span>
+            </div>
             <h2 class="card-title">Quiz Tình Yêu</h2>
-            <p class="card-desc">Trả lời đúng 4 câu hỏi về mối tình của chúng mình nhé! 💕</p>
+            <p class="card-desc">Trả lời đúng 4 câu hỏi về kỷ niệm của hai đứa mình nhé.</p>
 
             <div id="quizArea">
                 <div class="question-wrap" id="questionWrap">
@@ -61,7 +75,10 @@
                     <div class="question-hint" id="questionHint"></div>
                     <div class="quiz-input-group" id="quizInputGroup">
                         <input type="text" class="quiz-input" id="quizInput" placeholder="Nhập câu trả lời..." autocomplete="off">
-                        <button class="game-btn" id="quizBtn">Trả lời ✓</button>
+                        <button class="game-btn" id="quizBtn">
+                            <span>Trả lời</span>
+                            <i data-lucide="check" class="btn-icon"></i>
+                        </button>
                     </div>
                     <div class="quiz-options hidden" id="quizOptions"></div>
                     <p class="quiz-error" id="quizError"></p>
@@ -71,16 +88,19 @@
                 </div>
             </div>
             <div class="game-success hidden" id="quizSuccess">
-                <div class="success-anim">🎉</div>
-                <p>Giỏi quá Pé Thúi! Mở hộp quà nào!</p>
+                <div class="success-anim success-icon"><i data-lucide="party-popper"></i></div>
+                <p>Giỏi quá Pé Thúi! Hộp quà đã sẵn sàng để mở!</p>
             </div>
         </section>
 
         <!-- ===== GAME C: HEART PUZZLE (JIGSAW PUZZLE) ===== -->
         <section class="game-card" id="gameC" data-game="1">
-            <div class="card-badge" style="--badge-color:#ff6b9d">🧩 Thử thách 2</div>
+            <div class="card-badge" style="--badge-color:#ff6b9d">
+                <i data-lucide="puzzle" class="badge-icon"></i>
+                <span>Thử thách 2</span>
+            </div>
             <h2 class="card-title">Xếp Hình Trái Tim</h2>
-            <p class="card-desc">Kéo hoặc chạm vào các mảnh ghép bên dưới để lắp ráp thành trái tim hoàn chỉnh nhé! 💕</p>
+            <p class="card-desc">Kéo hoặc chạm vào các mảnh ghép bên dưới để lắp ráp thành trái tim hoàn chỉnh nhé.</p>
 
             <div id="puzzleArea">
                 <!-- Heart Jigsaw Target Board -->
@@ -104,14 +124,17 @@
                         </div>
                         <!-- Completed Heart Aura -->
                         <div class="heart-completed-glow" id="heartCompletedGlow">
-                            <div class="glow-icon">💖</div>
-                            <div class="glow-sparkles">✨</div>
+                            <div class="glow-icon"><i data-lucide="heart"></i></div>
+                            <div class="glow-sparkles"><i data-lucide="sparkles"></i></div>
                         </div>
                     </div>
                     <div class="heart-count" id="heartCount">Đã ghép: 0/4 mảnh</div>
                 </div>
 
-                <p class="jigsaw-guide" id="jigsawGuide">💡 Chạm mảnh ghép bên dưới rồi chạm ô tương ứng (hoặc kéo thả)</p>
+                <p class="jigsaw-guide" id="jigsawGuide">
+                    <i data-lucide="mouse-pointer-click" class="guide-icon"></i>
+                    <span>Chạm mảnh ghép bên dưới rồi chọn vị trí tương ứng (hoặc kéo thả)</span>
+                </p>
 
                 <!-- Tray containing draggable/clickable pieces -->
                 <div class="jigsaw-tray" id="jigsawTray"></div>
@@ -121,41 +144,60 @@
                 </div>
             </div>
             <div class="game-success hidden" id="puzzleSuccess">
-                <div class="success-anim">💖</div>
-                <p>Trái tim đã hoàn chỉnh! Em thật tuyệt! 🌸</p>
+                <div class="success-anim success-icon"><i data-lucide="heart"></i></div>
+                <p>Trái tim đã hoàn chỉnh! Em thật tuyệt vời!</p>
             </div>
         </section>
 
         <!-- ===== GAME D: SECRET CODE ===== -->
         <section class="game-card" id="gameD" data-game="2">
-            <div class="card-badge" style="--badge-color:#00c9b1">🔐 Thử thách 3</div>
+            <div class="card-badge" style="--badge-color:#00c9b1">
+                <i data-lucide="key-round" class="badge-icon"></i>
+                <span>Thử thách 3</span>
+            </div>
             <h2 class="card-title">Giải Mã Mật Thư</h2>
-            <p class="card-desc">Anh đã mã hóa một bí mật ngọt ngào cho em. Hãy giải mã nhé! 🔑</p>
+            <p class="card-desc">Một thông điệp bí mật dành riêng cho em. Hãy giải mã nhé!</p>
 
             <div id="codeArea">
                 <div class="cipher-box">
-                    <div class="cipher-title">📜 Mật thư bí ẩn:</div>
-                    <div class="cipher-message" id="cipherMessage">🍋 🌺 🎵 ❤️</div>
-                    <div class="cipher-hint-toggle" onclick="toggleCipherHint()">💡 Xem bảng giải mã</div>
+                    <div class="cipher-title">
+                        <i data-lucide="scroll" class="cipher-icon"></i>
+                        <span>Mật thư bí ẩn:</span>
+                    </div>
+                    <!-- Aesthetic Geometric Minimalist Symbols for LOVE -->
+                    <div class="cipher-message" id="cipherMessage">✦ ◈ ▲ ⟡</div>
+                    <div class="cipher-hint-toggle" onclick="toggleCipherHint()">
+                        <i data-lucide="help-circle" class="btn-icon"></i>
+                        <span>Xem bảng giải mã</span>
+                    </div>
                     <div class="cipher-table" id="cipherTable">
                         <table>
-                            <tr><th>Ký hiệu</th><th>Chữ cái</th><th>Ký hiệu</th><th>Chữ cái</th></tr>
-                            <tr><td>🍋</td><td>L</td><td>🌺</td><td>O</td></tr>
-                            <tr><td>🎵</td><td>V</td><td>❤️</td><td>E</td></tr>
-                            <tr><td>💙</td><td>I</td><td>🎈</td><td>B</td></tr>
-                            <tr><td>🌹</td><td>R</td><td>🎯</td><td>T/H</td></tr>
-                            <tr><td>🌊</td><td>D</td><td>🍎</td><td>A</td></tr>
-                            <tr><td>💛</td><td>Y</td><td>🌸</td><td>U/N</td></tr>
+                            <thead>
+                                <tr><th>Ký hiệu</th><th>Chữ cái</th><th>Ký hiệu</th><th>Chữ cái</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>✦</td><td>L</td><td>◈</td><td>O</td></tr>
+                                <tr><td>▲</td><td>V</td><td>⟡</td><td>E</td></tr>
+                                <tr><td>◇</td><td>I</td><td>✧</td><td>B</td></tr>
+                                <tr><td>❖</td><td>R</td><td>⬖</td><td>T / H</td></tr>
+                                <tr><td>⬡</td><td>D</td><td>✶</td><td>A</td></tr>
+                                <tr><td>◬</td><td>Y</td><td>○</td><td>U / N</td></tr>
+                            </tbody>
                         </table>
                     </div>
                 </div>
-                <input type="text" class="quiz-input" id="codeInput" placeholder="Nhập từ giải mã..." autocomplete="off" maxlength="20">
-                <button class="game-btn teal" id="codeBtn">Giải mã ✓</button>
+                <div class="quiz-input-group">
+                    <input type="text" class="quiz-input" id="codeInput" placeholder="Nhập từ giải mã..." autocomplete="off" maxlength="20">
+                    <button class="game-btn teal" id="codeBtn">
+                        <span>Giải mã</span>
+                        <i data-lucide="unlock" class="btn-icon"></i>
+                    </button>
+                </div>
                 <p class="quiz-error" id="codeError"></p>
             </div>
             <div class="game-success hidden" id="codeSuccess">
-                <div class="success-anim">🔓</div>
-                <p>Xuất sắc! Em đã giải mã được bí mật của anh! 💕</p>
+                <div class="success-anim success-icon"><i data-lucide="unlock"></i></div>
+                <p>Xuất sắc! Em đã giải mã được thông điệp bí mật!</p>
             </div>
         </section>
     </main>
@@ -164,33 +206,43 @@
     <div class="final-overlay hidden" id="finalOverlay">
         <canvas id="finalCanvas"></canvas>
         <div class="letter-container" id="letterContainer">
-            <div class="letter-envelope-decor">💌 BỨC THƯ ĐẶC BIỆT DÀNH CHO EM 💌</div>
+            <div class="letter-envelope-decor">
+                <i data-lucide="mail" class="envelope-icon"></i>
+                <span>BỨC THƯ ĐẶC BIỆT DÀNH CHO EM</span>
+            </div>
             <div class="letter-paper">
-                <div class="letter-seal">💖</div>
+                <div class="letter-seal"><i data-lucide="heart" class="seal-icon"></i></div>
                 <div class="letter-header">
-                    <h2 class="letter-title">Thư Gửi Pé Thúi Yêu Của Anh 🎂❤️</h2>
+                    <h2 class="letter-title">Thư Gửi Pé Thúi Yêu Của Anh</h2>
                     <p class="letter-date">Hà Nội, ngày 07 tháng 10 năm 2026</p>
                 </div>
-                <div class="letter-divider">🌸 ✨ 🌸</div>
+                <div class="letter-divider">
+                    <span class="div-line"></span>
+                    <i data-lucide="sparkles" class="div-star"></i>
+                    <span class="div-line"></span>
+                </div>
                 <div class="letter-body">
                     <p class="letter-salutation">Pé Thúi yêu thương nhất của anh,</p>
-                    <p>Chúc mừng sinh nhật pé iu tròn 22 tuổi! Chúc em tuổi mới luôn tràn ngập nụ cười hạnh phúc, mãi xinh đẹp rạng ngời, mau ăn chóng lớn 🌱 và kiếm được thật nhiều money 💵💸💰 nha!</p>
-                    <p>Cảm ơn em đã luôn ở bên, mang lại cho anh những ngày tháng ngọt ngào và ấm áp nhất. Anh mong rằng chúng mình sẽ cùng nhau đón thật nhiều sinh nhật nữa nhé! ❤️</p>
+                    <p>Chúc mừng sinh nhật pé iu tròn 22 tuổi! Chúc em tuổi mới luôn tràn ngập nụ cười hạnh phúc, mãi xinh đẹp rạng ngời, mau ăn chóng lớn và gặt hái thật nhiều thành công nha!</p>
+                    <p>Cảm ơn em đã luôn ở bên, mang lại cho anh những ngày tháng ngọt ngào và ấm áp nhất. Anh mong rằng chúng mình sẽ cùng nhau đón thật nhiều sinh nhật nữa nhé!</p>
                     
                     <!-- Dòng cam kết quà đặc biệt theo yêu cầu -->
                     <div class="delivery-notice-box">
-                        <span class="delivery-icon">📦✨</span>
+                        <span class="delivery-icon"><i data-lucide="package-check" class="delivery-lucide"></i></span>
                         <p class="delivery-text">
-                            <strong>Tất cả các phần quà trên sẽ được chuyển đến quý khách vào tối ngày 7/10/2026 !!😉</strong>
+                            <strong>Tất cả các phần quà trên sẽ được chuyển đến quý khách vào tối ngày 7/10/2026 !!</strong>
                         </p>
                     </div>
                 </div>
                 <div class="letter-footer">
                     <p class="closing-phrase">Yêu em,</p>
-                    <p class="signature-name">Anh yêu của em 😘!!!</p>
+                    <p class="signature-name">Anh yêu của em!</p>
                 </div>
             </div>
-            <button class="letter-close-btn" onclick="closeLetter()">Đọc lại lần nữa 💖</button>
+            <button class="letter-close-btn" onclick="closeLetter()">
+                <i data-lucide="rotate-ccw" class="btn-icon"></i>
+                <span>Đọc lại lần nữa</span>
+            </button>
         </div>
     </div>
 
@@ -198,13 +250,12 @@
     <div class="gift-modal hidden" id="giftModal">
         <div class="modal-backdrop" onclick="closeModal()"></div>
         <div class="modal-box">
-            <button class="modal-close" onclick="closeModal()">✕</button>
-            <div class="modal-badge" id="modalBadge">🎁 Quà tặng 1</div>
-            <h3 class="modal-title" id="modalTitle">🎁 Quà của em!</h3>
+            <button class="modal-close" onclick="closeModal()"><i data-lucide="x"></i></button>
+            <div class="modal-badge" id="modalBadge">Quà tặng 1</div>
+            <h3 class="modal-title" id="modalTitle">Quà của em</h3>
             <div class="modal-img-wrap" id="modalImgWrap">
-                <!-- Gift image will appear here -->
                 <div class="gift-placeholder" id="giftPlaceholder">
-                    <div class="placeholder-icon">🎁</div>
+                    <div class="placeholder-icon"><i data-lucide="gift"></i></div>
                     <p>Hình ảnh quà sẽ hiện ở đây</p>
                 </div>
             </div>

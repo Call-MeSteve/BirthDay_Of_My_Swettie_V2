@@ -61,20 +61,36 @@ drawBg();
 const gameCompleted = [false, false, false]; // 0=Quiz, 1=Heart Jigsaw, 2=Code
 const openedGifts   = new Set();             // Must contain 0, 1, 2, 3 to trigger final letter
 
+// ===== PASTEL / ROSE-GOLD CELEBRATION CONFETTI =====
+function triggerPastelConfetti(opts = {}) {
+    if (typeof confetti !== 'function') return;
+    confetti({
+        particleCount: opts.particleCount || 45,
+        spread: opts.spread || 65,
+        origin: opts.origin || { y: 0.65 },
+        colors: ['#D4AF37', '#FFB6C1', '#FFFFFF', '#E0BFB8', '#F6D5D5', '#FAD02C'],
+        ticks: 200,
+        gravity: 0.8,
+        scalar: 0.95,
+        disableForReducedMotion: true
+    });
+}
+
 function updateGiftReminder() {
     const hint = document.getElementById('giftReminderHint');
     if (!hint) return;
 
     if (gameCompleted.every(Boolean)) {
         if (openedGifts.size < 4) {
-            hint.textContent = `👑 Xuất sắc! Pé đã vượt qua cả 3 vòng (Đã mở ${openedGifts.size}/4 quà). Hãy mở nốt phần quà đặc biệt để xem thư bí mật nhé! 🎁✨`;
+            hint.innerHTML = `<i data-lucide="sparkles" class="hint-icon"></i> <span>Pé đã vượt qua cả 3 vòng (Đã mở ${openedGifts.size}/4 quà). Hãy mở nốt phần quà đặc biệt để xem thư bí mật nhé!</span>`;
             hint.classList.add('visible');
             hint.classList.add('pulse');
         } else {
-            hint.textContent = `🎉 Pé đã mở hết tất cả quà rồi! Mời em đón đọc bức thư tình yêu nhé! 💕`;
+            hint.innerHTML = `<i data-lucide="mail-heart" class="hint-icon"></i> <span>Pé đã mở hết tất cả quà rồi! Mời em đón đọc bức thư tình yêu nhé!</span>`;
             hint.classList.add('visible');
             hint.classList.remove('pulse');
         }
+        if (window.lucide) lucide.createIcons();
     }
 }
 
@@ -83,15 +99,18 @@ function unlockSpecialGift() {
     if (specialBox && specialBox.classList.contains('locked')) {
         specialBox.classList.remove('locked');
         specialBox.classList.add('unlocked');
-        specialBox.querySelector('.box-icon').textContent = '🎁';
-        specialBox.title = 'Bấm để mở PHẦN QUÀ ĐẶC BIỆT! 👑';
+        const iconWrap = specialBox.querySelector('.box-icon');
+        if (iconWrap) iconWrap.innerHTML = '<i data-lucide="gift" class="lucide-icon"></i>';
+        specialBox.title = 'Bấm để mở PHẦN QUÀ ĐẶC BIỆT!';
         specialBox.onclick = () => openGiftModal(3);
 
         const hint = document.getElementById('giftReminderHint');
         if (hint) {
-            hint.textContent = `👑 WOW! Pé Thúi đã xuất sắc hoàn thành cả 3 thử thách! PHẦN QUÀ ĐẶC BIỆT ĐÃ MỞ KHÓA! 🎁✨`;
+            hint.innerHTML = `<i data-lucide="crown" class="hint-icon"></i> <span>Pé Thúi đã xuất sắc hoàn thành cả 3 thử thách! PHẦN QUÀ ĐẶC BIỆT ĐÃ MỞ KHÓA!</span>`;
             hint.classList.add('visible', 'pulse');
         }
+        if (window.lucide) lucide.createIcons();
+        triggerPastelConfetti({ particleCount: 65, spread: 85 });
     }
 }
 
@@ -108,9 +127,11 @@ function markGameComplete(index) {
     if (box) {
         box.classList.remove('locked');
         box.classList.add('unlocked');
-        box.querySelector('.box-icon').textContent = '🎁';
+        const iconWrap = box.querySelector('.box-icon');
+        if (iconWrap) iconWrap.innerHTML = '<i data-lucide="gift" class="lucide-icon"></i>';
         box.title = 'Bấm để mở quà!';
         box.addEventListener('click', () => openGiftModal(index));
+        if (window.lucide) lucide.createIcons();
     }
 
     // When all 3 games are completed -> Unlock Special Gift (gift02)
@@ -213,8 +234,9 @@ function handleChoiceSelect(selectedKey, btnEl, q) {
     const errorEl = document.getElementById('quizError');
     if (selectedKey === q.correctKey) {
         btnEl.classList.add('correct');
-        errorEl.textContent = '✅ Chính xác rồi! Sân Bay là nơi định mệnh đưa ta gặp nhau! 💕✈️';
+        errorEl.textContent = 'Chính xác! Sân Bay là nơi định mệnh đưa ta gặp nhau.';
         errorEl.style.color = '#4ade80';
+        triggerPastelConfetti({ particleCount: 30, spread: 50 });
         document.getElementById('quizProgress').style.width =
             `${((currentQuestion + 1) / QUIZ_QUESTIONS.length) * 100}%`;
 
@@ -228,6 +250,8 @@ function handleChoiceSelect(selectedKey, btnEl, q) {
                 document.getElementById('quizProgress').style.width = '100%';
                 document.getElementById('quizArea').classList.add('hidden');
                 document.getElementById('quizSuccess').classList.remove('hidden');
+                if (window.lucide) lucide.createIcons();
+                triggerPastelConfetti({ particleCount: 55, spread: 70 });
                 markGameComplete(0);
             }
         }, 900);
@@ -235,7 +259,7 @@ function handleChoiceSelect(selectedKey, btnEl, q) {
         btnEl.classList.remove('shake');
         void btnEl.offsetWidth;
         btnEl.classList.add('shake', 'wrong');
-        errorEl.textContent = '💔 Chưa chính xác rồi pé ơi... Thử lại đáp án khác nhé!';
+        errorEl.textContent = 'Chưa chính xác rồi pé ơi... Thử lại đáp án khác nhé!';
         errorEl.style.color = '#ff6b6b';
         setTimeout(() => {
             btnEl.classList.remove('shake', 'wrong');
@@ -447,13 +471,15 @@ function finishHeartPuzzle() {
     if (board) board.classList.add('completed');
     if (glow)  glow.classList.add('active');
 
-    showJigsawHint("💖 Tuyệt vời! Trái tim đã được ghép nối hoàn chỉnh!");
+    showJigsawHint("Tuyệt vời! Trái tim đã được ghép nối hoàn chỉnh!");
+    triggerPastelConfetti({ particleCount: 50, spread: 70 });
 
     setTimeout(() => {
         const area = document.getElementById('puzzleArea');
         const success = document.getElementById('puzzleSuccess');
         if (area) area.classList.add('hidden');
         if (success) success.classList.remove('hidden');
+        if (window.lucide) lucide.createIcons();
         markGameComplete(1);
     }, 1200);
 }
@@ -484,11 +510,13 @@ function checkCode() {
     const correct = CIPHER_ANSWERS.map(a => a.toLowerCase()).includes(val.toLowerCase());
 
     if (correct) {
-        document.getElementById('codeError').textContent = '✅ Đúng rồi! "LOVE" — Anh yêu em! 💕';
+        document.getElementById('codeError').textContent = 'Chính xác! "LOVE" — Bí mật ngọt ngào dành cho em!';
         document.getElementById('codeError').style.color = '#4ade80';
+        triggerPastelConfetti({ particleCount: 55, spread: 75 });
         setTimeout(() => {
             document.getElementById('codeArea').classList.add('hidden');
             document.getElementById('codeSuccess').classList.remove('hidden');
+            if (window.lucide) lucide.createIcons();
             markGameComplete(2);
         }, 1000);
     } else {
@@ -496,7 +524,7 @@ function checkCode() {
         input.classList.remove('shake');
         void input.offsetWidth;
         input.classList.add('shake');
-        document.getElementById('codeError').textContent = '🔒 Chưa đúng... em xem lại bảng giải mã nhé!';
+        document.getElementById('codeError').textContent = 'Chưa đúng... em xem lại bảng giải mã nhé!';
         document.getElementById('codeError').style.color = '#ff6b6b';
         setTimeout(() => input.classList.remove('shake'), 500);
     }
@@ -587,14 +615,41 @@ function showFinalCelebration() {
     const overlay = document.getElementById('finalOverlay');
     if (!overlay) return;
     overlay.classList.remove('hidden');
+    if (window.lucide) lucide.createIcons();
+
+    // Trigger multi-stage luxury pastel confetti
+    if (typeof confetti === 'function') {
+        const colors = ['#D4AF37', '#FFB6C1', '#FFFFFF', '#E0BFB8', '#F6D5D5', '#FAD02C'];
+        confetti({
+            particleCount: 50,
+            angle: 60,
+            spread: 60,
+            origin: { x: 0, y: 0.7 },
+            colors: colors
+        });
+        confetti({
+            particleCount: 50,
+            angle: 120,
+            spread: 60,
+            origin: { x: 1, y: 0.7 },
+            colors: colors
+        });
+        setTimeout(() => {
+            confetti({
+                particleCount: 70,
+                spread: 100,
+                origin: { y: 0.6 },
+                colors: colors
+            });
+        }, 400);
+    }
 
     const canvas = document.getElementById('finalCanvas');
     const ctx    = canvas.getContext('2d');
     canvas.width  = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const COLORS = ['#ff6b9d','#ffd60a','#ff4d6d','#ffffff','#c9184a','#ffef80','#ff9de2'];
-    const EMOJIS = ['❤️','🎂','⭐','🎉','🌸','💕','🎈','💝','💌'];
+    const COLORS = ['#D4AF37', '#FFB6C1', '#FFFFFF', '#E0BFB8', '#ffd60a'];
     let parts = [];
 
     class FinalParticle {
@@ -604,18 +659,16 @@ function showFinalCelebration() {
             const angle  = edge === 0
                 ? (Math.random() * Math.PI * 0.5 + Math.PI * 0.25)
                 : -(Math.random() * Math.PI * 0.5 + Math.PI * 0.25);
-            const speed  = Math.random() * 5 + 2;
+            const speed  = Math.random() * 4 + 2;
             this.vx   = Math.cos(angle) * speed * (Math.random() < 0.5 ? 1 : -1);
             this.vy   = Math.sin(angle) * speed;
-            this.maxLife = 160 + Math.random() * 100;
+            this.maxLife = 180 + Math.random() * 80;
             this.life    = this.maxLife;
-            this.size    = Math.random() * 6 + 3;
-            this.isEmoji = Math.random() < 0.28;
-            this.emoji   = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
+            this.size    = Math.random() * 5 + 2.5;
             this.color   = COLORS[Math.floor(Math.random() * COLORS.length)];
             this.rot     = Math.random() * Math.PI * 2;
-            this.rotS    = (Math.random() - 0.5) * 0.08;
-            this.gravity = 0.08;
+            this.rotS    = (Math.random() - 0.5) * 0.05;
+            this.gravity = 0.05;
         }
         update() {
             this.vx *= 0.99;
@@ -632,15 +685,16 @@ function showFinalCelebration() {
             ctx.save();
             ctx.translate(this.x, this.y);
             ctx.rotate(this.rot);
-            if (this.isEmoji) {
-                ctx.font = `${this.size * 2.5}px Arial`;
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText(this.emoji, 0, 0);
-            } else {
-                ctx.fillStyle = this.color;
-                ctx.fillRect(-this.size / 2, -this.size * 1.5, this.size, this.size * 3);
-            }
+            // Draw minimalist elegant 4-point star sparkle
+            ctx.fillStyle = this.color;
+            ctx.beginPath();
+            const s = this.size;
+            ctx.moveTo(0, -s * 2);
+            ctx.quadraticCurveTo(0, 0, s * 2, 0);
+            ctx.quadraticCurveTo(0, 0, 0, s * 2);
+            ctx.quadraticCurveTo(0, 0, -s * 2, 0);
+            ctx.quadraticCurveTo(0, 0, 0, -s * 2);
+            ctx.fill();
             ctx.restore();
             ctx.globalAlpha = 1;
         }
@@ -648,7 +702,7 @@ function showFinalCelebration() {
 
     let spawnTimer = 0;
     function spawnWave() {
-        for (let i = 0; i < 12; i++) {
+        for (let i = 0; i < 8; i++) {
             parts.push(new FinalParticle(Math.random() < 0.5 ? 0 : 1));
         }
     }
@@ -657,7 +711,7 @@ function showFinalCelebration() {
         if (overlay.classList.contains('hidden')) return;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         spawnTimer++;
-        if (spawnTimer % 12 === 0) spawnWave();
+        if (spawnTimer % 16 === 0) spawnWave();
         parts = parts.filter(p => p.life > 0);
         parts.forEach(p => { p.update(); p.draw(); });
         requestAnimationFrame(animateFinal);
@@ -680,6 +734,10 @@ window.addEventListener('DOMContentLoaded', () => {
     initPuzzle();
     initCode();
 
+    if (window.lucide) {
+        lucide.createIcons();
+    }
+
     // Friendly click feedback when clicking locked boxes
     document.querySelectorAll('.gift-box').forEach(box => {
         box.addEventListener('click', () => {
@@ -691,12 +749,13 @@ window.addEventListener('DOMContentLoaded', () => {
                 const hint = document.getElementById('giftReminderHint');
                 if (hint) {
                     if (box.id === 'giftBoxSpecial') {
-                        hint.textContent = '🔒 Pé hãy vượt qua cả 3 thử thách bên dưới để mở khóa phần quà đặc biệt này nhé! 👑🎁';
+                        hint.innerHTML = '<i data-lucide="crown" class="hint-icon"></i> <span>Pé hãy vượt qua cả 3 thử thách bên dưới để mở khóa phần quà đặc biệt này nhé!</span>';
                     } else {
                         const gameNum = parseInt(box.dataset.game) + 1;
-                        hint.textContent = `🔒 Pé hãy vượt qua Thử thách ${gameNum} bên dưới để mở hộp quà này nhé! 💕`;
+                        hint.innerHTML = `<i data-lucide="lock" class="hint-icon"></i> <span>Pé hãy vượt qua Thử thách ${gameNum} bên dưới để mở hộp quà này nhé!</span>`;
                     }
                     hint.classList.add('visible', 'pulse');
+                    if (window.lucide) lucide.createIcons();
                 }
             }
         });
