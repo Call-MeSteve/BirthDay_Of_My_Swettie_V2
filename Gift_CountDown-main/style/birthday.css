@@ -51,3 +51,131 @@
     object-fit: cover;
     object-position: bottom;
 }
+
+/* City Mascots (Shin & Bạn ngắm pháo hoa) */
+.bday-city-mascot,
+.bday-city-mascot * {
+    box-sizing: border-box !important;
+}
+
+.bday-city-mascot {
+    position: fixed !important;
+    bottom: 12px !important;
+    top: auto !important;
+    z-index: 1005 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 6px !important;
+    pointer-events: none !important;
+    opacity: 0;
+    transition: opacity 1.2s ease, transform 0.4s ease;
+    width: auto !important;
+    height: auto !important;
+    max-height: 125px !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.bday-city-mascot.visible {
+    opacity: 1 !important;
+}
+
+.bday-city-mascot.mascot-left,
+.bday-city-mascot.mascot-shin {
+    left: 24px !important;
+    right: auto !important;
+}
+
+.bday-city-mascot.mascot-right,
+.bday-city-mascot.mascot-cat {
+    right: 24px !important;
+    left: auto !important;
+}
+
+.bday-city-mascot img {
+    width: 68px !important;
+    height: 68px !important;
+    max-width: 68px !important;
+    max-height: 68px !important;
+    object-fit: contain !important;
+    border-radius: 12px !important;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5)) !important;
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+}
+
+.bday-mascot-speech {
+    display: inline-block !important;
+    width: auto !important;
+    height: auto !important;
+    max-height: 36px !important;
+    background: rgba(255, 255, 255, 0.94) !important;
+    color: #c9184a !important;
+    font-family: 'Dancing Script', cursive, sans-serif !important;
+    font-size: 1rem !important;
+    font-weight: 700 !important;
+    padding: 4px 12px !important;
+    border-radius: 14px !important;
+    border: 1.5px solid #ffb703 !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
+    white-space: nowrap !important;
+    line-height: 1.2 !important;
+    position: relative !important;
+    text-align: center !important;
+    animation: speechBounce 2s infinite ease-in-out !important;
+}
+
+.bday-mascot-speech::after {
+    content: '' !important;
+    position: absolute !important;
+    bottom: -6px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    border-width: 6px 6px 0 6px !important;
+    border-style: solid !important;
+    border-color: rgba(255, 255, 255, 0.94) transparent transparent transparent !important;
+    display: block !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+
+@keyframes speechBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+}
+
+.next-btn-mascot {
+    display: block;
+    margin: 0 auto 4px;
+    height: auto !important;
+}
+
+.next-btn-mascot img {
+    width: 48px !important;
+    height: 48px !important;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 10px rgba(255, 214, 10, 0.6));
+    animation: mascotBounceSmall 1.2s infinite alternate ease-in-out;
+    display: block;
+    margin: 0 auto;
+}
+
+@keyframes mascotBounceSmall {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-8px); }
+}
+
+@media (max-width: 600px) {
+    .bday-city-mascot.mascot-left { left: 8px; bottom: 8px; }
+    .bday-city-mascot.mascot-right { right: 8px; bottom: 8px; }
+    .bday-city-mascot img { width: 55px !important; height: 55px !important; }
+    .bday-mascot-speech { font-size: 0.8rem; padding: 2px 7px; }
+}

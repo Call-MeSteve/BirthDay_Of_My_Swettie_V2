@@ -10,7 +10,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Great+Vibes&family=Nunito:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,600;1,400&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="./style/gift.css">
+    <link rel="stylesheet" href="./style/gift.css?v=3.3">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Canvas Confetti -->
@@ -37,19 +37,23 @@
         <!-- Gift boxes (locked until game completed) -->
         <div class="gift-boxes" id="giftBoxes">
             <div class="gift-box locked" id="giftBox0" data-game="0">
+                <span class="gift-badge-dot"></span>
                 <div class="box-icon"><i data-lucide="lock" class="lucide-icon"></i></div>
                 <div class="box-label">Quà 1</div>
             </div>
             <div class="gift-box locked" id="giftBox1" data-game="1">
+                <span class="gift-badge-dot"></span>
                 <div class="box-icon"><i data-lucide="lock" class="lucide-icon"></i></div>
                 <div class="box-label">Quà 2</div>
             </div>
             <div class="gift-box locked" id="giftBox2" data-game="2">
+                <span class="gift-badge-dot"></span>
                 <div class="box-icon"><i data-lucide="lock" class="lucide-icon"></i></div>
                 <div class="box-label">Quà 3</div>
             </div>
             <div class="gift-box special-box locked" id="giftBoxSpecial" data-game="3"
                 title="Hoàn thành cả 3 thử thách để mở khóa quà đặc biệt!">
+                <span class="gift-badge-dot"></span>
                 <div class="special-crown"><i data-lucide="crown"></i></div>
                 <div class="box-icon"><i data-lucide="lock" class="lucide-icon"></i></div>
                 <div class="box-label">Quà Đặc Biệt</div>
@@ -87,6 +91,7 @@
                         </button>
                     </div>
                     <div class="quiz-options hidden" id="quizOptions"></div>
+                    <div class="quiz-feedback-sticker hidden" id="quizFeedbackSticker"></div>
                     <p class="quiz-error" id="quizError"></p>
                 </div>
                 <div class="quiz-progress">
@@ -96,7 +101,7 @@
                 </div>
             </div>
             <div class="game-success hidden" id="quizSuccess">
-                <div class="success-anim success-icon"><i data-lucide="party-popper"></i></div>
+                <img src="./images/Happy Dance GIF by TVGalicia.gif" class="game-success-gif" alt="Shin nhảy múa ăn mừng" />
                 <p>Giỏi quá Pé Thúi! Hộp quà đã sẵn sàng để mở!</p>
             </div>
         </section>
@@ -116,31 +121,55 @@
                     <div class="heart-jigsaw-board" id="heartJigsawBoard">
                         <!-- True Heart Contour Silhouette Background -->
                         <div class="heart-silhouette-backdrop">
-                            <svg viewBox="0 0 240 210" class="heart-contour-svg" aria-hidden="true">
-                                <path
-                                    d="M 120 195 C 40 145, 10 95, 10 50 C 10 18, 38 2, 70 2 C 95 2, 112 18, 120 34 C 128 18, 145 2, 170 2 C 202 2, 230 18, 230 50 C 230 95, 200 145, 120 195 Z"
-                                    class="heart-contour-path" />
-                                <line x1="120" y1="34" x2="120" y2="195" class="heart-divider-line" />
-                                <line x1="12" y1="99" x2="228" y2="99" class="heart-divider-line" />
+                            <svg viewBox="0 0 240 210" class="heart-contour-svg" aria-hidden="true" id="heartContourSvg">
+                                <!-- Bảng màu Gradient chuẩn xác cho từng mảnh trái tim -->
+                                <defs>
+                                    <linearGradient id="heartGrad0" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#ff758c" />
+                                        <stop offset="100%" stop-color="#c9184a" />
+                                    </linearGradient>
+                                    <linearGradient id="heartGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#f48fb1" />
+                                        <stop offset="100%" stop-color="#d81b60" />
+                                    </linearGradient>
+                                    <linearGradient id="heartGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#e040fb" />
+                                        <stop offset="100%" stop-color="#ad1457" />
+                                    </linearGradient>
+                                    <linearGradient id="heartGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#ffd54f" />
+                                        <stop offset="100%" stop-color="#f06292" />
+                                    </linearGradient>
+                                </defs>
+
+                                <!-- 4 Mảnh ghép chuẩn xác tuyệt đối (Tự định hình nét đứt viền trái tim và các phân khu) -->
+                                <!-- Mảnh 0: Thùy Trái -->
+                                <path id="heartPart0" class="heart-slot-part part-0"
+                                      d="M 119 36 C 112 20, 95 4, 70 4 C 40 4, 13 20, 13 50 C 13 68, 15 85, 22 98 L 119 98 Z" />
+                                <!-- Mảnh 1: Thùy Phải -->
+                                <path id="heartPart1" class="heart-slot-part part-1"
+                                      d="M 121 36 L 121 98 L 218 98 C 225 85, 227 68, 227 50 C 227 20, 200 4, 170 4 C 145 4, 128 20, 121 36 Z" />
+                                <!-- Mảnh 2: Cánh Trái (Vát cong chữ V ôm sát mép trái xuống chóp nhọn đáy tim) -->
+                                <path id="heartPart2" class="heart-slot-part part-2"
+                                      d="M 22 100 L 119 100 L 119 194 C 72 171, 35 138, 22 100 Z" />
+                                <!-- Mảnh 3: Cánh Phải (Vát cong chữ V ôm sát mép phải xuống chóp nhọn đáy tim) -->
+                                <path id="heartPart3" class="heart-slot-part part-3"
+                                      d="M 121 100 L 218 100 C 205 138, 168 171, 121 194 Z" />
                             </svg>
                         </div>
 
-                        <!-- 4 Anatomical Interlocking Slots -->
+                        <!-- 4 Anatomical Interlocking Slots (Chỉ giữ Icon thẩm mỹ, tinh giản) -->
                         <div class="jigsaw-slot slot-0" data-piece="0" id="slot-0" title="Thùy Trái">
                             <i data-lucide="heart-pulse" class="slot-icon"></i>
-                            <span class="slot-label">Thùy Trái</span>
                         </div>
                         <div class="jigsaw-slot slot-1" data-piece="1" id="slot-1" title="Thùy Phải">
                             <i data-lucide="git-branch" class="slot-icon"></i>
-                            <span class="slot-label">Thùy Phải</span>
                         </div>
                         <div class="jigsaw-slot slot-2" data-piece="2" id="slot-2" title="Cánh Trái">
                             <i data-lucide="feather" class="slot-icon"></i>
-                            <span class="slot-label">Cánh Trái</span>
                         </div>
                         <div class="jigsaw-slot slot-3" data-piece="3" id="slot-3" title="Cánh Phải">
                             <i data-lucide="navigation" class="slot-icon"></i>
-                            <span class="slot-label">Cánh Phải</span>
                         </div>
 
                         <!-- Completed Heart Aura -->
@@ -165,7 +194,7 @@
                 </div>
             </div>
             <div class="game-success hidden" id="puzzleSuccess">
-                <div class="success-anim success-icon"><i data-lucide="heart"></i></div>
+                <img src="./images/giphy2.gif" class="game-success-gif heart-gif" alt="Mèo tim LOVE" />
                 <p>Trái tim đã hoàn chỉnh! Em thật tuyệt vời!</p>
             </div>
         </section>
@@ -253,7 +282,7 @@
                 <p class="quiz-error" id="codeError"></p>
             </div>
             <div class="game-success hidden" id="codeSuccess">
-                <div class="success-anim success-icon"><i data-lucide="unlock"></i></div>
+                <img src="./images/smileShin.gif" class="game-success-gif" alt="Shin mỉm cười ngại ngùng" />
                 <p>Xuất sắc! Em đã giải mã được thông điệp bí mật!</p>
             </div>
         </section>
@@ -263,11 +292,14 @@
     <div class="final-overlay hidden" id="finalOverlay">
         <canvas id="finalCanvas"></canvas>
         <div class="letter-container" id="letterContainer">
+            <button class="letter-corner-close" onclick="closeLetter()" title="Đóng bức thư">
+                <i data-lucide="x"></i>
+            </button>
             <div class="letter-envelope-decor">
                 <i data-lucide="mail" class="envelope-icon"></i>
                 <span>BỨC THƯ ĐẶC BIỆT DÀNH CHO EM</span>
             </div>
-            <div class="letter-paper">
+            <div class="letter-paper" id="letterPaper">
                 <div class="letter-seal"><i data-lucide="heart" class="seal-icon"></i></div>
                 <div class="letter-header">
                     <h2 class="letter-title">Thư Gửi Pé Thúi Yêu Của Anh</h2>
@@ -279,30 +311,46 @@
                     <span class="div-line"></span>
                 </div>
                 <div class="letter-body">
-                    <p class="letter-salutation">Pé Thúi yêu thương nhất của anh,</p>
-                    <p>Chúc mừng sinh nhật pé iu tròn 22 tuổi! Chúc em tuổi mới luôn tràn ngập nụ cười hạnh phúc, mãi
-                        xinh đẹp rạng ngời, mau ăn chóng lớn và gặt hái thật nhiều thành công nha!</p>
-                    <p>Cảm ơn em đã luôn ở bên, mang lại cho anh những ngày tháng ngọt ngào và ấm áp nhất. Anh mong rằng
-                        chúng mình sẽ cùng nhau đón thật nhiều sinh nhật nữa nhé!</p>
+                    <p class="letter-salutation" id="letterSalutation">Pé Thúi yêu thương nhất của anh,</p>
+                    <p id="letterP1">Chúc mừng sinh nhật pé iu tròn 22 tuổi! Chúc em tuổi mới luôn tràn ngập nụ cười hạnh phúc, mãi xinh đẹp rạng ngời, mau ăn chóng lớn và gặt hái thật nhiều thành công nha!</p>
+                    <p id="letterP2">Cảm ơn em đã luôn ở bên, mang lại cho anh những ngày tháng ngọt ngào và ấm áp nhất. Anh mong rằng chúng mình sẽ cùng nhau đón thật nhiều sinh nhật nữa nhé!</p>
 
                     <!-- Dòng cam kết quà đặc biệt theo yêu cầu -->
-                    <div class="delivery-notice-box">
+                    <div class="delivery-notice-box" id="deliveryNoticeBox">
                         <span class="delivery-icon"><i data-lucide="package-check" class="delivery-lucide"></i></span>
                         <p class="delivery-text">
-                            <strong>Tất cả các phần quà trên sẽ được chuyển đến quý khách vào tối ngày 7/10/2026
-                                !!</strong>
+                            <strong>Tất cả các phần quà trên sẽ được chuyển đến quý khách vào tối ngày 7/10/2026 !!</strong>
                         </p>
                     </div>
                 </div>
                 <div class="letter-footer">
-                    <p class="closing-phrase">Yêu em,</p>
-                    <p class="signature-name">Anh yêu của em!</p>
+                    <div class="letter-signature-wrap">
+                        <div class="signature-text-col">
+                            <p class="closing-phrase" id="closingPhrase">Yêu em nhiều lắm,</p>
+                            <p class="signature-name" id="signatureName">Anh yêu của em! ❤️</p>
+                        </div>
+                        <div class="letter-mascot-sticker">
+                            <img src="./images/intro04.gif" alt="Shin ôm tim" title="Anh yêu em nhiều lắm!" />
+                        </div>
+                    </div>
                 </div>
             </div>
-            <button class="letter-close-btn" onclick="closeLetter()">
-                <i data-lucide="rotate-ccw" class="btn-icon"></i>
-                <span>Đọc lại lần nữa</span>
-            </button>
+
+            <!-- Các nút điều khiển đọc thư -->
+            <div class="letter-actions">
+                <button class="letter-action-btn skip-btn" id="letterSkipBtn" onclick="skipLetterTypewriter()" title="Hiện toàn bộ bức thư ngay lập tức">
+                    <i data-lucide="fast-forward" class="btn-icon"></i>
+                    <span>Xem hết ngay</span>
+                </button>
+                <button class="letter-action-btn replay-btn" id="letterReplayBtn" onclick="startLetterTypewriter()" title="Chạy lại hiệu ứng viết thư từ đầu">
+                    <i data-lucide="rotate-ccw" class="btn-icon"></i>
+                    <span>Đọc lại từ đầu</span>
+                </button>
+                <button class="letter-action-btn close-btn" onclick="closeLetter()" title="Đóng bức thư">
+                    <i data-lucide="x" class="btn-icon"></i>
+                    <span>Đóng thư</span>
+                </button>
+            </div>
         </div>
     </div>
 
@@ -311,6 +359,9 @@
         <div class="modal-backdrop" onclick="closeModal()"></div>
         <div class="modal-box">
             <button class="modal-close" onclick="closeModal()"><i data-lucide="x"></i></button>
+            <div class="modal-mascot-sticker">
+                <img src="./images/moon04.gif" alt="Bé gấu mừng rỡ" title="Chúc mừng pé nhận quà nha!" />
+            </div>
             <div class="modal-badge" id="modalBadge">Quà tặng 1</div>
             <h3 class="modal-title" id="modalTitle">Quà của em</h3>
             <div class="modal-img-wrap" id="modalImgWrap">
@@ -319,7 +370,18 @@
                     <p>Hình ảnh quà sẽ hiện ở đây</p>
                 </div>
             </div>
-            <p class="modal-msg" id="modalMsg"></p>
+            <p class="modal-msg hidden" id="modalMsg"></p>
+        </div>
+    </div>
+
+    <!-- FLOATING INTERACTIVE MASCOT (MÈO MEME NHÚN NHẢY) -->
+    <div class="floating-mascot-widget" id="floatingMascot">
+        <div class="mascot-speech-bubble" id="mascotBubble">
+            <span>Bấm vào tui để nhận lời chúc cute nha! 💖</span>
+        </div>
+        <div class="mascot-avatar-btn" onclick="triggerMascotSpeech()" title="Chạm vào tui nè!">
+            <img src="./images/Cat Meme Sticker by Brime.gif" alt="Mèo meme gật gù" id="mascotImg" />
+            <span class="mascot-heart-pulse">💕</span>
         </div>
     </div>
 

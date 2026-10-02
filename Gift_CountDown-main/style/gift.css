@@ -124,7 +124,44 @@ svg.lucide {
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     position: relative;
-    overflow: hidden;
+    overflow: visible;
+}
+
+/* Chấm đỏ thông báo khi hộp quà chưa được mở */
+.gift-badge-dot {
+    display: none;
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 14px;
+    height: 14px;
+    background: #ff2a5f;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    z-index: 10;
+    pointer-events: none;
+    box-shadow: 0 0 10px rgba(255, 42, 95, 0.95);
+    animation: giftBadgePulse 1.4s infinite ease-in-out;
+}
+
+@keyframes giftBadgePulse {
+    0% {
+        transform: scale(0.9);
+        box-shadow: 0 0 0 0 rgba(255, 42, 95, 0.85);
+    }
+    70% {
+        transform: scale(1.18);
+        box-shadow: 0 0 0 7px rgba(255, 42, 95, 0);
+    }
+    100% {
+        transform: scale(0.9);
+        box-shadow: 0 0 0 0 rgba(255, 42, 95, 0);
+    }
+}
+
+/* Khi hộp quà đã mở khóa nhưng người dùng chưa click xem quà -> Hiện chấm đỏ */
+.gift-box.unlocked:not(.opened) .gift-badge-dot {
+    display: block;
 }
 
 .gift-box.locked {
@@ -156,6 +193,9 @@ svg.lucide {
 
 .box-icon {
     font-size: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .box-label {
@@ -169,9 +209,106 @@ svg.lucide {
     color: var(--gold);
 }
 
-.gift-box.viewed {
+/* Khi hộp quà ĐÃ ĐƯỢC MỞ: Hiện luôn ảnh phần quà thu nhỏ */
+.gift-box.opened {
+    opacity: 1 !important;
     border-color: #ffd60a !important;
-    box-shadow: 0 0 30px rgba(255, 214, 10, 0.45) !important;
+    background: linear-gradient(145deg, rgba(255, 214, 10, 0.16), rgba(255, 77, 109, 0.14)) !important;
+    box-shadow: 0 0 25px rgba(255, 214, 10, 0.45) !important;
+    animation: none !important;
+    cursor: pointer;
+}
+
+.gift-box.opened .box-label {
+    color: #ffd60a !important;
+    font-weight: 800;
+}
+
+.box-gift-thumb {
+    width: 46px;
+    height: 46px;
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+    border: 1.5px solid #ffd60a;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.35);
+    animation: thumbPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes thumbPop {
+    0% {
+        transform: scale(0.6);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.box-gift-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.gift-box.opened:hover .box-gift-thumb img {
+    transform: scale(1.15);
+}
+
+.thumb-check {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 15px;
+    height: 15px;
+    background: #22c55e;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    border: 1.5px solid #ffffff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+.thumb-check svg {
+    width: 9px;
+    height: 9px;
+    stroke-width: 3.5px;
+}
+
+.all-gifts-unlocked-banner {
+    margin-top: 1rem;
+    padding: 0.8rem 1rem;
+    background: linear-gradient(135deg, rgba(255, 214, 10, 0.22), rgba(255, 107, 157, 0.28));
+    border: 1.5px solid #ffd60a;
+    border-radius: 12px;
+    color: #ffd60a;
+    font-weight: 800;
+    font-size: 0.88rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-align: center;
+    line-height: 1.4;
+    animation: bannerGlow 1.5s infinite alternate;
+}
+
+@keyframes bannerGlow {
+    0% {
+        box-shadow: 0 0 10px rgba(255, 214, 10, 0.3);
+    }
+    100% {
+        box-shadow: 0 0 25px rgba(255, 214, 10, 0.8);
+    }
 }
 
 /* SPECIAL GIFT BOX (Vương Miện / Quà Đặc Biệt) */
@@ -657,11 +794,7 @@ svg.lucide {
 }
 
 .heart-contour-path {
-    fill: rgba(224, 122, 151, 0.04);
-    stroke: rgba(224, 122, 151, 0.35);
-    stroke-width: 1.5;
-    stroke-dasharray: 4 4;
-    transition: all 0.5s ease;
+    display: none;
 }
 
 .heart-jigsaw-board.completed {
@@ -721,6 +854,82 @@ svg.lucide {
     clip-path: polygon(0% 0%, 100% 0%, 92% 18%, 82% 34%, 68% 50%, 52% 65%, 35% 78%, 18% 90%, 0% 100%);
 }
 
+.heart-slot-part {
+    fill: rgba(255, 255, 255, 0.05);
+    stroke: rgba(224, 122, 151, 0.45);
+    stroke-width: 1.5;
+    stroke-dasharray: 4 4;
+    transition: fill 0.6s cubic-bezier(0.16, 1, 0.3, 1), stroke 0.4s ease, filter 0.5s ease;
+    cursor: pointer;
+}
+
+.heart-slot-part.hovered {
+    fill: rgba(224, 122, 151, 0.25) !important;
+    stroke: #ffd60a !important;
+    stroke-width: 2 !important;
+    filter: drop-shadow(0 0 10px rgba(255, 214, 10, 0.8));
+}
+
+/* Áp dụng Gradient chuyển màu sống động khi từng mảnh được ghép vào */
+.heart-slot-part.part-0.placed {
+    fill: url(#heartGrad0) !important;
+    stroke: #ffd60a !important;
+    stroke-dasharray: none !important;
+    stroke-width: 1.5 !important;
+    filter: drop-shadow(0 0 16px rgba(255, 117, 140, 0.85));
+    animation: snapPopSvg 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.heart-slot-part.part-1.placed {
+    fill: url(#heartGrad1) !important;
+    stroke: #ffd60a !important;
+    stroke-dasharray: none !important;
+    stroke-width: 1.5 !important;
+    filter: drop-shadow(0 0 16px rgba(216, 27, 96, 0.85));
+    animation: snapPopSvg 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.heart-slot-part.part-2.placed {
+    fill: url(#heartGrad2) !important;
+    stroke: #ffd60a !important;
+    stroke-dasharray: none !important;
+    stroke-width: 1.5 !important;
+    filter: drop-shadow(0 0 16px rgba(224, 64, 251, 0.85));
+    animation: snapPopSvg 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.heart-slot-part.part-3.placed {
+    fill: url(#heartGrad3) !important;
+    stroke: #ffd60a !important;
+    stroke-dasharray: none !important;
+    stroke-width: 1.5 !important;
+    filter: drop-shadow(0 0 16px rgba(255, 213, 79, 0.85));
+    animation: snapPopSvg 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes snapPopSvg {
+    0% {
+        transform: scale(0.94);
+        transform-origin: center;
+    }
+
+    50% {
+        transform: scale(1.04);
+        transform-origin: center;
+    }
+
+    100% {
+        transform: scale(1);
+        transform-origin: center;
+    }
+}
+
+.heart-jigsaw-board.completed .heart-slot-part {
+    stroke: transparent !important;
+    stroke-dasharray: none !important;
+    filter: drop-shadow(0 0 18px rgba(224, 122, 151, 0.85)) drop-shadow(0 0 35px rgba(168, 85, 247, 0.65)) !important;
+}
+
 .jigsaw-slot {
     position: absolute;
     z-index: 2;
@@ -731,10 +940,11 @@ svg.lucide {
     text-align: center;
     gap: 4px;
     padding: 6px;
-    background: rgba(255, 255, 255, 0.05);
-    border: none;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     box-sizing: border-box;
@@ -748,6 +958,9 @@ svg.lucide {
     width: 105px;
     height: 93px;
     border-radius: 52px 52px 0 14px;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
 }
 
 /* Mảnh 2 (Thùy Phải): Góc trên-phải */
@@ -757,72 +970,70 @@ svg.lucide {
     width: 105px;
     height: 93px;
     border-radius: 52px 52px 14px 0;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
 }
 
-/* Mảnh 3 (Cánh Trái): Vát cong chữ V ôm sát đường nét đứt, chóp nhọn góc trong tại đáy tim */
+/* Mảnh 3 (Cánh Trái): Vát cong chữ V ôm sát đường nét đứt, icon đặt tại trung tâm mảnh */
 .jigsaw-slot.slot-2 {
     top: 99px;
-    left: 14px;
-    width: 105px;
+    left: 22px;
+    width: 98px;
     height: 97px;
     border-radius: 0;
     -webkit-clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 82% 90%, 65% 78%, 48% 65%, 32% 50%, 18% 34%, 8% 18%);
     clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 82% 90%, 65% 78%, 48% 65%, 32% 50%, 18% 34%, 8% 18%);
-    padding: 8px 8px 30px 24px;
-    justify-content: flex-start;
+    padding: 0 0 28px 0;
+    justify-content: center;
+    align-items: center;
 }
 
-/* Mảnh 4 (Cánh Phải): Vát cong chữ V ôm sát đường nét đứt, chóp nhọn góc trong tại đáy tim */
+/* Mảnh 4 (Cánh Phải): Vát cong chữ V ôm sát đường nét đứt, icon đặt tại trung tâm mảnh */
 .jigsaw-slot.slot-3 {
     top: 99px;
     left: 121px;
-    width: 105px;
+    width: 98px;
     height: 97px;
     border-radius: 0;
     -webkit-clip-path: polygon(0% 0%, 100% 0%, 92% 18%, 82% 34%, 68% 50%, 52% 65%, 35% 78%, 18% 90%, 0% 100%);
     clip-path: polygon(0% 0%, 100% 0%, 92% 18%, 82% 34%, 68% 50%, 52% 65%, 35% 78%, 18% 90%, 0% 100%);
-    padding: 8px 24px 30px 8px;
-    justify-content: flex-start;
+    padding: 0 0 28px 0;
+    justify-content: center;
+    align-items: center;
 }
 
 .jigsaw-slot .slot-icon {
-    width: 24px;
-    height: 24px;
-    stroke-width: 2px;
+    width: 28px;
+    height: 28px;
+    stroke-width: 2.2px;
     color: #ffd60a;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 3px;
+    margin: 0;
     transition: all 0.3s ease;
-    filter: drop-shadow(0 0 6px rgba(255, 214, 10, 0.7));
+    filter: drop-shadow(0 0 8px rgba(255, 214, 10, 0.85));
 }
 
-.jigsaw-slot .slot-label {
-    font-size: 0.82rem;
-    font-weight: 800;
-    color: #ffffff;
-    letter-spacing: 0.4px;
-    text-align: center;
-    line-height: 1.25;
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9), 0 0 8px rgba(0, 0, 0, 0.7);
+.jigsaw-slot .slot-label,
+.jigsaw-slot.placed .placed-label {
+    display: none !important;
 }
 
 .jigsaw-slot:hover:not(.placed) {
-    background: rgba(224, 122, 151, 0.22);
-    transform: scale(1.02);
-    filter: drop-shadow(0 0 10px rgba(224, 122, 151, 0.5));
+    transform: scale(1.04);
 }
 
 .jigsaw-slot.drag-hover {
-    background: rgba(255, 214, 10, 0.28);
-    transform: scale(1.03);
-    filter: drop-shadow(0 0 12px rgba(255, 214, 10, 0.8));
+    transform: scale(1.05);
 }
 
 .jigsaw-slot.placed {
-    box-shadow: 0 0 24px rgba(224, 122, 151, 0.6), inset 0 0 15px rgba(255, 255, 255, 0.25) !important;
-    filter: drop-shadow(0 0 12px rgba(224, 122, 151, 0.6));
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    filter: none !important;
     cursor: default;
     animation: snapPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
@@ -831,23 +1042,15 @@ svg.lucide {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 2px;
+    margin: 0;
 }
 
 .jigsaw-slot.placed .placed-icon svg {
-    width: 22px;
-    height: 22px;
-    stroke-width: 2px;
+    width: 28px;
+    height: 28px;
+    stroke-width: 2.2px;
     color: #ffd60a;
-    filter: drop-shadow(0 0 8px rgba(255, 214, 10, 0.8));
-}
-
-.jigsaw-slot.placed .placed-label {
-    font-size: 0.82rem;
-    font-weight: 800;
-    color: #ffffff;
-    letter-spacing: 0.4px;
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9), 0 0 8px rgba(0, 0, 0, 0.7);
+    filter: drop-shadow(0 0 10px rgba(255, 214, 10, 0.9));
 }
 
 @keyframes snapPop {
@@ -911,10 +1114,11 @@ svg.lucide {
 .jigsaw-tray {
     display: flex;
     flex-wrap: wrap;
-    gap: 14px;
+    gap: 12px;
     justify-content: center;
     align-items: center;
-    margin-bottom: 1rem;
+    margin: 0 auto 1.2rem;
+    max-width: 380px;
     min-height: 80px;
 }
 
@@ -922,7 +1126,7 @@ svg.lucide {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
     cursor: grab;
     transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     user-select: none;
@@ -933,63 +1137,66 @@ svg.lucide {
 }
 
 .piece-visual {
-    width: 66px;
-    height: 56px;
-    border: 1.5px solid rgba(255, 255, 255, 0.4);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    width: 72px;
+    height: 60px;
+    border: 2px solid rgba(255, 255, 255, 0.65);
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 5px;
+    gap: 7px;
     color: #fff;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
     transition: all 0.3s ease;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
-/* Shapes corresponding to interlocking pieces: Chụm nhọn ôm đáy */
+/* Các hình khối đại diện 4 mảnh trái tim giải phẫu tinh tế (không dùng clip-path để tránh lỗi đen góc) */
 .piece-visual.shape-0 {
-    border-radius: 22px 22px 0 6px;
+    border-radius: 26px 26px 6px 14px;
 }
 
 .piece-visual.shape-1 {
-    border-radius: 22px 22px 6px 0;
+    border-radius: 26px 26px 14px 6px;
 }
 
 .piece-visual.shape-2 {
-    border-radius: 0;
-    -webkit-clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 82% 90%, 65% 78%, 48% 65%, 32% 50%, 18% 34%, 8% 18%);
-    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 82% 90%, 65% 78%, 48% 65%, 32% 50%, 18% 34%, 8% 18%);
-    padding-left: 8px;
+    border-radius: 6px 14px 6px 30px;
 }
 
 .piece-visual.shape-3 {
-    border-radius: 0;
-    -webkit-clip-path: polygon(0% 0%, 100% 0%, 92% 18%, 82% 34%, 68% 50%, 52% 65%, 35% 78%, 18% 90%, 0% 100%);
-    clip-path: polygon(0% 0%, 100% 0%, 92% 18%, 82% 34%, 68% 50%, 52% 65%, 35% 78%, 18% 90%, 0% 100%);
-    padding-right: 8px;
+    border-radius: 14px 6px 30px 6px;
+}
+
+.piece-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .piece-icon svg {
-    width: 18px;
-    height: 18px;
-    stroke-width: 1.75px;
+    width: 22px;
+    height: 22px;
+    stroke-width: 2.2px;
     color: #ffd60a;
-    filter: drop-shadow(0 0 6px rgba(255, 214, 10, 0.6));
+    filter: drop-shadow(0 0 8px rgba(255, 214, 10, 0.85));
 }
 
 .piece-num {
-    font-size: 0.9rem;
-    font-weight: 800;
-    color: #fff;
+    font-size: 1.15rem;
+    font-weight: 900;
+    color: #ffffff;
+    line-height: 1;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9), 0 0 8px rgba(0, 0, 0, 0.7);
 }
 
 .piece-text {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     color: #ffffff;
     font-weight: 800;
     letter-spacing: 0.4px;
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.95), 0 0 8px rgba(0, 0, 0, 0.8);
+    white-space: nowrap;
 }
 
 .jigsaw-piece:hover:not(.used) {
@@ -1409,36 +1616,128 @@ svg.lucide {
     color: #c9184a;
 }
 
-.letter-close-btn {
-    margin-top: 1.2rem;
-    background: linear-gradient(135deg, #c9184a, #ff6b9d);
-    border: none;
-    border-radius: 20px;
-    padding: 0.7rem 1.8rem;
+.letter-corner-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #ffd60a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 20;
+    transition: all 0.25s ease;
+}
+
+.letter-corner-close svg {
+    width: 18px;
+    height: 18px;
+    stroke-width: 2.2px;
+}
+
+.letter-corner-close:hover {
+    background: rgba(201, 24, 74, 0.85);
     color: #fff;
+    transform: rotate(90deg);
+}
+
+/* Con trỏ chạy chữ lãng mạn */
+.letter-cursor {
+    display: inline-block;
+    width: 2.5px;
+    height: 1.15em;
+    background: #c9184a;
+    margin-left: 3px;
+    vertical-align: -0.15em;
+    border-radius: 2px;
+    animation: romanticBlink 0.75s infinite ease-in-out;
+}
+
+@keyframes romanticBlink {
+    0%, 100% {
+        opacity: 1;
+        filter: drop-shadow(0 0 5px rgba(201, 24, 74, 0.9));
+    }
+    50% {
+        opacity: 0;
+    }
+}
+
+.delivery-notice-box {
+    margin: 1.2rem 0;
+    background: linear-gradient(135deg, rgba(255, 214, 10, 0.2), rgba(255, 107, 157, 0.15));
+    border-left: 4px solid #c9184a;
+    border-radius: 0 12px 12px 0;
+    padding: 0.9rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    transform: translateY(15px);
+    transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.delivery-notice-box.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.letter-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 1.2rem;
+}
+
+.letter-action-btn {
+    border: none;
+    border-radius: 22px;
+    padding: 0.65rem 1.3rem;
     font-family: 'Nunito', sans-serif;
     font-weight: 700;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    box-shadow: 0 4px 20px rgba(201, 24, 74, 0.4);
+    gap: 7px;
     transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.35);
 }
 
-.letter-close-btn .btn-icon {
+.letter-action-btn.skip-btn {
+    background: linear-gradient(135deg, #ffd60a, #ff9f1c);
+    color: #4a1525;
+}
+
+.letter-action-btn.replay-btn {
+    background: linear-gradient(135deg, #c9184a, #ff4d6d);
+    color: #fff;
+}
+
+.letter-action-btn.close-btn {
+    background: rgba(255, 255, 255, 0.18);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.letter-action-btn .btn-icon {
     width: 16px;
     height: 16px;
-    stroke-width: 2px;
+    stroke-width: 2.2px;
 }
 
-.letter-close-btn:hover {
+.letter-action-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 26px rgba(201, 24, 74, 0.6);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
 }
 
-.letter-close-btn:active {
+.letter-action-btn:active {
     transform: translateY(0);
 }
 
@@ -1591,6 +1890,234 @@ svg.lucide {
     padding: 0.8rem 1rem;
     margin-top: 0.4rem;
     text-shadow: 0 0 10px rgba(255, 214, 10, 0.3);
+}
+
+/* ===== MASCOT & CELEBRATION GIFS (Thêm sinh động, ngộ nghĩnh) ===== */
+.game-success-gif {
+    width: 120px;
+    height: auto;
+    max-height: 120px;
+    border-radius: 18px;
+    margin: 0 auto 0.8rem;
+    display: block;
+    box-shadow: 0 8px 30px rgba(255, 107, 157, 0.45);
+    object-fit: contain;
+    animation: mascotBounce 1.2s infinite alternate ease-in-out;
+}
+
+.game-success-gif.heart-gif {
+    box-shadow: 0 8px 30px rgba(224, 64, 251, 0.45);
+}
+
+@keyframes mascotBounce {
+    0% {
+        transform: translateY(0) scale(1);
+    }
+    100% {
+        transform: translateY(-6px) scale(1.04);
+    }
+}
+
+/* Quiz Feedback Sticker (Shin Like / Shin Shock khi trả lời) */
+.quiz-feedback-sticker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 0.6rem 0;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    animation: feedbackPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.quiz-feedback-sticker img {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    object-fit: cover;
+    border: 1.5px solid #ffd60a;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.quiz-feedback-sticker .feedback-text {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #ffd60a;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+@keyframes feedbackPop {
+    0% {
+        transform: scale(0.6);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Letter Mascot Sticker (Shin ôm tim cạnh chữ ký) */
+.letter-signature-wrap {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    gap: 14px;
+    margin-top: 1rem;
+}
+
+.signature-text-col {
+    text-align: right;
+}
+
+.letter-mascot-sticker img {
+    width: 68px;
+    height: 68px;
+    object-fit: contain;
+    border-radius: 12px;
+    filter: drop-shadow(0 4px 12px rgba(201, 24, 74, 0.3));
+    animation: mascotHeartSway 2s infinite ease-in-out alternate;
+}
+
+@keyframes mascotHeartSway {
+    0% {
+        transform: rotate(-4deg) scale(0.98);
+    }
+    100% {
+        transform: rotate(6deg) scale(1.05);
+    }
+}
+
+/* Modal Mascot Sticker (Bé gấu mừng rỡ khi mở quà) - Căn giữa đỉnh modal, hiển thị trọn vẹn 100% không bị che */
+.modal-box {
+    position: relative;
+}
+
+.modal-mascot-sticker {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 8px;
+    width: auto;
+    height: auto;
+    z-index: 25;
+    pointer-events: none;
+}
+
+.modal-mascot-sticker img {
+    width: 65px;
+    height: 65px;
+    object-fit: contain;
+    filter: drop-shadow(0 6px 18px rgba(255, 107, 157, 0.65));
+    animation: bearDance 1.2s infinite alternate ease-in-out;
+    display: block;
+}
+
+.modal-msg.hidden {
+    display: none !important;
+}
+
+@keyframes bearDance {
+    0% {
+        transform: translateY(0) rotate(-4deg);
+    }
+    100% {
+        transform: translateY(-8px) rotate(4deg);
+    }
+}
+
+/* Floating Interactive Mascot (Mèo Meme Gật Gù) */
+.floating-mascot-widget {
+    position: fixed;
+    bottom: 22px;
+    right: 22px;
+    z-index: 150;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+    user-select: none;
+}
+
+.mascot-speech-bubble {
+    background: linear-gradient(135deg, #ffffff, #fff2f5);
+    color: #c9184a;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 800;
+    padding: 7px 14px;
+    border-radius: 16px 16px 4px 16px;
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.45);
+    border: 1.5px solid #ffd60a;
+    max-width: 220px;
+    text-align: right;
+    line-height: 1.4;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    animation: bubbleFloat 2s infinite alternate ease-in-out;
+}
+
+@keyframes bubbleFloat {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(-4px);
+    }
+}
+
+.mascot-avatar-btn {
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.14);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 2.5px solid #ffd60a;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 25px rgba(255, 214, 10, 0.45);
+    position: relative;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.mascot-avatar-btn:hover {
+    transform: scale(1.12) rotate(6deg);
+    box-shadow: 0 10px 30px rgba(255, 214, 10, 0.7);
+}
+
+.mascot-avatar-btn:active {
+    transform: scale(0.95);
+}
+
+.mascot-avatar-btn img {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.mascot-heart-pulse {
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    font-size: 1rem;
+    animation: heartPulseMini 1.4s infinite;
+}
+
+@keyframes heartPulseMini {
+    0% {
+        transform: scale(0.8);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(0.8);
+    }
 }
 
 /* ===== HIDDEN UTILITY ===== */

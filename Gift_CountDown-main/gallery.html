@@ -588,6 +588,86 @@
             0% { transform: rotate(0deg) scaleX(-1); }
             100% { transform: rotate(6deg) scaleX(-1); }
         }
+
+        /* ===== GARDEN MASCOT GIFS ===== */
+        .garden-mascot {
+            position: absolute;
+            bottom: 22px;
+            z-index: 25;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            pointer-events: all;
+            cursor: pointer;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .garden-mascot.mascot-left {
+            left: 35px;
+        }
+        .garden-mascot.mascot-right {
+            right: 35px;
+        }
+        .garden-mascot:hover {
+            transform: scale(1.15) translateY(-5px);
+        }
+        .garden-mascot img {
+            width: 82px;
+            height: 82px;
+            object-fit: contain;
+            filter: drop-shadow(0 6px 15px rgba(255, 107, 157, 0.45));
+            animation: mascotWiggle 2.5s infinite ease-in-out alternate;
+        }
+        .garden-mascot-badge {
+            background: rgba(255, 255, 255, 0.95);
+            color: #d81b60;
+            font-family: 'Dancing Script', cursive;
+            font-size: 0.95rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(255, 107, 157, 0.3);
+            border: 1px solid rgba(255, 107, 157, 0.4);
+            white-space: nowrap;
+        }
+        @keyframes mascotWiggle {
+            0% { transform: rotate(-4deg); }
+            100% { transform: rotate(4deg); }
+        }
+
+        /* Filmstrip Mascot */
+        .filmstrip-mascot {
+            margin: 0 auto 0.6rem;
+            display: flex;
+            justify-content: center;
+        }
+        .filmstrip-mascot img {
+            width: 75px;
+            height: auto;
+            border-radius: 14px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            filter: drop-shadow(0 4px 12px rgba(255, 214, 10, 0.4));
+        }
+
+        /* Collage Shin Dance */
+        .collage-mascot-wrap {
+            margin: 1.5rem auto 0.8rem;
+            display: flex;
+            justify-content: center;
+        }
+        .collage-shin-dance {
+            width: 100px;
+            height: auto;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(255, 107, 157, 0.45);
+        }
+
+        @media (max-width: 600px) {
+            .garden-mascot.mascot-left { left: 12px; bottom: 15px; }
+            .garden-mascot.mascot-right { right: 12px; bottom: 15px; }
+            .garden-mascot img { width: 62px; height: 62px; }
+            .garden-mascot-badge { font-size: 0.8rem; padding: 2px 8px; }
+        }
     </style>
 </head>
 <body>
@@ -664,10 +744,23 @@
         </div>
 
         <p class="click-hint">🌸 Click hoặc chạm vào hộp để mở 🌸</p>
+
+        <!-- MASCOTS IN FLOWER GARDEN -->
+        <div class="garden-mascot mascot-left" title="Bé gấu chào pé iu!">
+            <img src="./images/moon03.gif" alt="Bé gấu xanh" />
+            <span class="garden-mascot-badge">Chào Pé Thúi! 🌸</span>
+        </div>
+        <div class="garden-mascot mascot-right" title="Shin ôm tim gửi trọn tình yêu!">
+            <img src="./images/intro04.gif" alt="Shin ôm tim" />
+            <span class="garden-mascot-badge">Yêu em nhiều! 💕</span>
+        </div>
     </div>
 
     <!-- GALLERY SCREEN (FILMSTRIP / CUỘN PHIM) -->
     <div class="gallery-screen" id="galleryScreen">
+        <div class="filmstrip-mascot">
+            <img src="./images/intro3.gif" alt="Shin cool ngầu" title="Kỷ niệm đẹp của tụi mình nè!" />
+        </div>
         <h2 class="gallery-title">Cuộn Phim Kỷ Niệm Của Chúng Mình 🎞️</h2>
 
         <div class="filmstrip-container">
@@ -698,6 +791,10 @@
         </p>
 
         <div class="collage-grid" id="collageGrid"></div>
+
+        <div class="collage-mascot-wrap">
+            <img src="./images/Happy Dance GIF by TVGalicia.gif" class="collage-shin-dance" alt="Shin Happy Dance" />
+        </div>
 
         <button class="collage-btn" onclick="goToGiftPage()">
             Đến phần Nhận Quà 🎁

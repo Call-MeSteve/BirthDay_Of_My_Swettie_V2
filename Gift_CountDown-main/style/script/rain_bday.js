@@ -74,6 +74,33 @@ function showNightView() {
         });
         document.body.appendChild(night);
         requestAnimationFrame(() => { night.style.opacity = "1"; });
+
+        // THÊM MASCOT SHIN & BẠN TRÊN NỀN THÀNH PHỐ ĐÊM (ẢNH GIF MỚI TOANH)
+        setTimeout(() => {
+            if (!document.getElementById("cityMascotShin")) {
+                const shinMascot = document.createElement("div");
+                shinMascot.id = "cityMascotShin";
+                shinMascot.className = "bday-city-mascot mascot-left mascot-shin";
+                shinMascot.innerHTML = `
+                    <span class="bday-mascot-speech">HBD Linh Thúi! 🎉</span>
+                    <img src="./images/intro3.gif" alt="Shin ngầu ngắm pháo hoa" />
+                `;
+                document.body.appendChild(shinMascot);
+                requestAnimationFrame(() => shinMascot.classList.add("visible"));
+            }
+
+            if (!document.getElementById("cityMascotCat")) {
+                const catMascot = document.createElement("div");
+                catMascot.id = "cityMascotCat";
+                catMascot.className = "bday-city-mascot mascot-right mascot-cat";
+                catMascot.innerHTML = `
+                    <span class="bday-mascot-speech">Pháo hoa đẹp quá! ✨</span>
+                    <img src="./images/intro06.gif" alt="Shin lắc mông vui vẻ" />
+                `;
+                document.body.appendChild(catMascot);
+                requestAnimationFrame(() => catMascot.classList.add("visible"));
+            }
+        }, 1200);
     }
 }
 
@@ -81,7 +108,12 @@ function showNextButton() {
     if (document.getElementById('nextPageBtn')) return;
     const btn = document.createElement('button');
     btn.id = 'nextPageBtn';
-    btn.innerHTML = '✨ Xem thêm bất ngờ ✨';
+    btn.innerHTML = `
+        <span class="next-btn-mascot">
+            <img src="./images/moon04.gif" alt="Bé gấu vẫy tay" />
+        </span>
+        <span>✨ Xem thêm bất ngờ ✨</span>
+    `;
     document.body.appendChild(btn);
     // Trigger animation on next frame
     requestAnimationFrame(() => {

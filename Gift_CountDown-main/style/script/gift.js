@@ -183,6 +183,7 @@ const QUIZ_QUESTIONS = [
 ];
 
 let currentQuestion = 0;
+let isQuizTransitioning = false;
 
 function initQuiz() {
     showQuestion(0);
@@ -191,11 +192,16 @@ function initQuiz() {
     const input = document.getElementById('quizInput');
     if (btn) btn.addEventListener('click', checkQuiz);
     if (input) input.addEventListener('keydown', e => {
-        if (e.key === 'Enter') checkQuiz();
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            if (!isQuizTransitioning) checkQuiz();
+        }
     });
 }
 
 function showQuestion(idx) {
+    isQuizTransitioning = false; // Mở khóa sẵn sàng cho câu hỏi mới
+
     const q = QUIZ_QUESTIONS[idx];
     document.getElementById('questionNum').textContent  = `Câu ${idx + 1} / ${QUIZ_QUESTIONS.length}`;
     document.getElementById('questionText').textContent = q.question;
@@ -203,8 +209,13 @@ function showQuestion(idx) {
     document.getElementById('quizError').textContent   = '';
     document.getElementById('quizProgress').style.width = `${(idx / QUIZ_QUESTIONS.length) * 100}%`;
 
+    const feedbackEl = document.getElementById('quizFeedbackSticker');
+    if (feedbackEl) feedbackEl.classList.add('hidden');
+
     const inputGroup = document.getElementById('quizInputGroup');
     const optionsContainer = document.getElementById('quizOptions');
+    const input = document.getElementById('quizInput');
+    const btn = document.getElementById('quizBtn');
 
     if (q.type === 'choice') {
         if (inputGroup) inputGroup.classList.add('hidden');
@@ -212,30 +223,46 @@ function showQuestion(idx) {
             optionsContainer.classList.remove('hidden');
             optionsContainer.innerHTML = '';
             q.options.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = 'quiz-option-btn';
-                btn.innerHTML = `<span class="opt-key">${opt.key}</span> <span>${opt.text}</span>`;
-                btn.onclick = () => handleChoiceSelect(opt.key, btn, q);
-                optionsContainer.appendChild(btn);
+                const optBtn = document.createElement('button');
+                optBtn.className = 'quiz-option-btn';
+                optBtn.innerHTML = `<span class="opt-key">${opt.key}</span> <span>${opt.text}</span>`;
+                optBtn.onclick = () => handleChoiceSelect(opt.key, optBtn, q);
+                optionsContainer.appendChild(optBtn);
             });
         }
     } else {
         if (optionsContainer) optionsContainer.classList.add('hidden');
         if (inputGroup) inputGroup.classList.remove('hidden');
-        const input = document.getElementById('quizInput');
         if (input) {
+            input.disabled = false;
             input.value = '';
             input.focus();
+        }
+        if (btn) {
+            btn.disabled = false;
         }
     }
 }
 
 function handleChoiceSelect(selectedKey, btnEl, q) {
+    if (isQuizTransitioning) return; // Chặn nhấp đúp khi đang chuyển câu
+
     const errorEl = document.getElementById('quizError');
+    const feedbackEl = document.getElementById('quizFeedbackSticker');
+
     if (selectedKey === q.correctKey) {
+        isQuizTransitioning = true; // Khóa ngay lập tức
+        document.querySelectorAll('.quiz-option-btn').forEach(b => b.disabled = true);
+
         btnEl.classList.add('correct');
         errorEl.textContent = 'Chính xác! Sân Bay là nơi định mệnh đưa ta gặp nhau.';
         errorEl.style.color = '#4ade80';
+
+        if (feedbackEl) {
+            feedbackEl.innerHTML = `<img src="./images/exactly.jpg" alt="Shin Like" /><span class="feedback-text">Chuẩn luôn pé iu! 👍✨</span>`;
+            feedbackEl.classList.remove('hidden');
+        }
+
         triggerPastelConfetti({ particleCount: 30, spread: 50 });
         document.getElementById('quizProgress').style.width =
             `${((currentQuestion + 1) / QUIZ_QUESTIONS.length) * 100}%`;
@@ -254,13 +281,19 @@ function handleChoiceSelect(selectedKey, btnEl, q) {
                 triggerPastelConfetti({ particleCount: 55, spread: 70 });
                 markGameComplete(0);
             }
-        }, 900);
+        }, 1100);
     } else {
         btnEl.classList.remove('shake');
         void btnEl.offsetWidth;
         btnEl.classList.add('shake', 'wrong');
         errorEl.textContent = 'Chưa chính xác rồi pé ơi... Thử lại đáp án khác nhé!';
         errorEl.style.color = '#ff6b6b';
+
+        if (feedbackEl) {
+            feedbackEl.innerHTML = `<img src="./images/sock.png" alt="Shin Shock" /><span class="feedback-text">Ái chà... chưa đúng rồi pé ơi! 😅</span>`;
+            feedbackEl.classList.remove('hidden');
+        }
+
         setTimeout(() => {
             btnEl.classList.remove('shake', 'wrong');
         }, 600);
@@ -268,16 +301,32 @@ function handleChoiceSelect(selectedKey, btnEl, q) {
 }
 
 function checkQuiz() {
-    const val = document.getElementById('quizInput').value.trim().toLowerCase();
+    if (isQuizTransitioning) return; // Chặn spam Enter hoặc bấm liên tục khi đang chuyển câu
+
+    const input = document.getElementById('quizInput');
+    const btn = document.getElementById('quizBtn');
+    const val = input ? input.value.trim().toLowerCase() : '';
     const q   = QUIZ_QUESTIONS[currentQuestion];
+    const feedbackEl = document.getElementById('quizFeedbackSticker');
 
     if (!val) return;
 
     const correct = q.answers.map(a => a.toLowerCase()).includes(val);
 
     if (correct) {
+        // KHÓA NGAY LẬP TỨC: Disable input và button để chặn triệt để Enter/Click tiếp theo
+        isQuizTransitioning = true;
+        if (input) input.disabled = true;
+        if (btn) btn.disabled = true;
+
         document.getElementById('quizError').textContent = '✅ Chính xác! Tuyệt vời!';
         document.getElementById('quizError').style.color = '#4ade80';
+
+        if (feedbackEl) {
+            feedbackEl.innerHTML = `<img src="./images/exactly.jpg" alt="Shin Like" /><span class="feedback-text">Chuẩn luôn pé iu! 👍✨</span>`;
+            feedbackEl.classList.remove('hidden');
+        }
+
         document.getElementById('quizProgress').style.width =
             `${((currentQuestion + 1) / QUIZ_QUESTIONS.length) * 100}%`;
 
@@ -293,14 +342,23 @@ function checkQuiz() {
                 document.getElementById('quizSuccess').classList.remove('hidden');
                 markGameComplete(0);
             }
-        }, 900);
+        }, 1100);
     } else {
-        const input = document.getElementById('quizInput');
-        input.classList.remove('shake');
-        void input.offsetWidth;
-        input.classList.add('shake');
+        if (input) {
+            input.classList.remove('shake');
+            void input.offsetWidth;
+            input.classList.add('shake');
+        }
         document.getElementById('quizError').textContent = 'Chưa chính xác... Em thử lại nhé!';
-        setTimeout(() => input.classList.remove('shake'), 500);
+
+        if (feedbackEl) {
+            feedbackEl.innerHTML = `<img src="./images/sock.png" alt="Shin Shock" /><span class="feedback-text">Ái chà... thử lại nghen pé! 😅</span>`;
+            feedbackEl.classList.remove('hidden');
+        }
+
+        setTimeout(() => {
+            if (input) input.classList.remove('shake');
+        }, 500);
     }
 }
 
@@ -308,10 +366,10 @@ function checkQuiz() {
 // GAME C — HEART JIGSAW PUZZLE (Thử thách xếp hình trái tim)
 // ===================================================
 const JIGSAW_PIECES = [
-    { id: 0, title: "Mảnh 1", label: "Thùy Trái", iconName: "heart-pulse", color: "linear-gradient(135deg, rgba(230, 100, 130, 0.9), rgba(200, 50, 90, 0.95))" },
-    { id: 1, title: "Mảnh 2", label: "Thùy Phải", iconName: "git-branch",  color: "linear-gradient(135deg, rgba(240, 140, 130, 0.9), rgba(215, 80, 110, 0.95))" },
-    { id: 2, title: "Mảnh 3", label: "Cánh Trái", iconName: "feather",     color: "linear-gradient(135deg, rgba(190, 45, 85, 0.9), rgba(155, 28, 65, 0.95))" },
-    { id: 3, title: "Mảnh 4", label: "Cánh Phải", iconName: "navigation",  color: "linear-gradient(135deg, rgba(212, 175, 55, 0.9), rgba(201, 24, 74, 0.95))" }
+    { id: 0, title: "Mảnh 1", label: "Thùy Trái", iconName: "heart-pulse", color: "linear-gradient(135deg, #ff5e7e, #c2185b)" },
+    { id: 1, title: "Mảnh 2", label: "Thùy Phải", iconName: "git-branch",  color: "linear-gradient(135deg, #ff758c, #d81b60)" },
+    { id: 2, title: "Mảnh 3", label: "Cánh Trái", iconName: "feather",     color: "linear-gradient(135deg, #ec407a, #9c154a)" },
+    { id: 3, title: "Mảnh 4", label: "Cánh Phải", iconName: "navigation",  color: "linear-gradient(135deg, #f59e0b, #c2185b)" }
 ];
 
 const placedPieces = [false, false, false, false];
@@ -374,19 +432,40 @@ function initPuzzle() {
             }
         });
 
+        // Hover effects on SVG part
+        slotEl.addEventListener('mouseenter', () => {
+            if (!placedPieces[slotId]) {
+                const svgPart = document.getElementById(`heartPart${slotId}`);
+                if (svgPart) svgPart.classList.add('hovered');
+            }
+        });
+
+        slotEl.addEventListener('mouseleave', () => {
+            const svgPart = document.getElementById(`heartPart${slotId}`);
+            if (svgPart) svgPart.classList.remove('hovered');
+        });
+
         // Drag & Drop handlers
         slotEl.addEventListener('dragover', (e) => {
             e.preventDefault();
-            if (!placedPieces[slotId]) slotEl.classList.add('drag-hover');
+            if (!placedPieces[slotId]) {
+                slotEl.classList.add('drag-hover');
+                const svgPart = document.getElementById(`heartPart${slotId}`);
+                if (svgPart) svgPart.classList.add('hovered');
+            }
         });
 
         slotEl.addEventListener('dragleave', () => {
             slotEl.classList.remove('drag-hover');
+            const svgPart = document.getElementById(`heartPart${slotId}`);
+            if (svgPart) svgPart.classList.remove('hovered');
         });
 
         slotEl.addEventListener('drop', (e) => {
             e.preventDefault();
             slotEl.classList.remove('drag-hover');
+            const svgPart = document.getElementById(`heartPart${slotId}`);
+            if (svgPart) svgPart.classList.remove('hovered');
             if (placedPieces[slotId]) return;
             const droppedPieceId = parseInt(e.dataTransfer.getData('text/plain'), 10);
             if (!isNaN(droppedPieceId)) {
@@ -424,10 +503,14 @@ function tryPlacePiece(pieceId, slotId) {
         // Correct piece! Snap into slot
         placedPieces[slotId] = true;
         slotEl.classList.add('placed');
-        slotEl.style.background = JIGSAW_PIECES[pieceId].color;
+        slotEl.style.background = 'transparent';
+        const svgPart = document.getElementById(`heartPart${slotId}`);
+        if (svgPart) {
+            svgPart.classList.remove('hovered');
+            svgPart.classList.add('placed');
+        }
         slotEl.innerHTML = `
             <span class="placed-icon"><i data-lucide="${JIGSAW_PIECES[pieceId].iconName}"></i></span>
-            <span class="placed-label">${JIGSAW_PIECES[pieceId].label}</span>
         `;
         if (window.lucide) lucide.createIcons();
 
@@ -494,12 +577,17 @@ function finishHeartPuzzle() {
 // ===================================================
 const CIPHER_ANSWERS = ['love', 'LOVE', 'Love'];
 
+let isCodeSubmitting = false;
+
 function initCode() {
     const btn = document.getElementById('codeBtn');
     const input = document.getElementById('codeInput');
     if (btn) btn.addEventListener('click', checkCode);
     if (input) input.addEventListener('keydown', e => {
-        if (e.key === 'Enter') checkCode();
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            if (!isCodeSubmitting) checkCode();
+        }
     });
 }
 
@@ -509,12 +597,20 @@ function toggleCipherHint() {
 }
 
 function checkCode() {
-    const val = document.getElementById('codeInput').value.trim();
+    if (isCodeSubmitting) return;
+
+    const input = document.getElementById('codeInput');
+    const btn = document.getElementById('codeBtn');
+    const val = input ? input.value.trim() : '';
     if (!val) return;
 
     const correct = CIPHER_ANSWERS.map(a => a.toLowerCase()).includes(val.toLowerCase());
 
     if (correct) {
+        isCodeSubmitting = true;
+        if (input) input.disabled = true;
+        if (btn) btn.disabled = true;
+
         document.getElementById('codeError').textContent = 'Chính xác! "LOVE" — Bí mật ngọt ngào dành cho em!';
         document.getElementById('codeError').style.color = '#4ade80';
         triggerPastelConfetti({ particleCount: 55, spread: 75 });
@@ -525,13 +621,16 @@ function checkCode() {
             markGameComplete(2);
         }, 1000);
     } else {
-        const input = document.getElementById('codeInput');
-        input.classList.remove('shake');
-        void input.offsetWidth;
-        input.classList.add('shake');
+        if (input) {
+            input.classList.remove('shake');
+            void input.offsetWidth;
+            input.classList.add('shake');
+        }
         document.getElementById('codeError').textContent = 'Chưa đúng... em xem lại bảng giải mã nhé!';
         document.getElementById('codeError').style.color = '#ff6b6b';
-        setTimeout(() => input.classList.remove('shake'), 500);
+        setTimeout(() => {
+            if (input) input.classList.remove('shake');
+        }, 500);
     }
 }
 
@@ -565,6 +664,8 @@ const GIFT_DATA = [
     }
 ];
 
+let autoLetterTimer = null;
+
 function openGiftModal(index) {
     const data = GIFT_DATA[index];
     const modal = document.getElementById('giftModal');
@@ -572,14 +673,29 @@ function openGiftModal(index) {
     // Track that user opened this gift!
     openedGifts.add(index);
     const box = index === 3 ? document.getElementById('giftBoxSpecial') : document.getElementById(`giftBox${index}`);
-    if (box) box.classList.add('viewed');
+    if (box) {
+        box.classList.remove('unlocked');
+        box.classList.add('opened');
+
+        // HIỂN THỊ ẢNH PHẦN QUÀ TRỰC TIẾP TRÊN Ô HỘP QUÀ
+        const iconWrap = box.querySelector('.box-icon');
+        if (iconWrap && data.imgSrc) {
+            iconWrap.innerHTML = `
+                <div class="box-gift-thumb">
+                    <img src="${data.imgSrc}" alt="${data.title}" />
+                    <span class="thumb-check"><i data-lucide="check"></i></span>
+                </div>
+            `;
+            if (window.lucide) lucide.createIcons();
+        }
+    }
 
     const badgeEl = document.getElementById('modalBadge');
     if (badgeEl) badgeEl.textContent = data.badge;
 
     document.getElementById('modalTitle').textContent = data.title;
-    document.getElementById('modalMsg').textContent   = data.message;
-
+    
+    const msgEl = document.getElementById('modalMsg');
     const imgWrap  = document.getElementById('modalImgWrap');
     const placeholder = document.getElementById('giftPlaceholder');
 
@@ -601,15 +717,43 @@ function openGiftModal(index) {
 
     modal.classList.remove('hidden');
     updateGiftReminder();
+
+    // CHỈ GIỮ LẠI 1 DÒNG DUY NHẤT Ở TRÊN (modalTitle), KHÔNG LẶP LẠI DÒNG DƯỚI (modalMsg)
+    // KIỂM TRA ĐIỀU KIỆN: ĐÃ MỞ TẤT CẢ 4 PHẦN QUÀ -> HIỆN BANNER VÀ TỰ ĐỘNG XUẤT HIỆN BỨC THƯ TÌNH YÊU
+    if (openedGifts.size === 4) {
+        msgEl.innerHTML = `
+            <div class="all-gifts-unlocked-banner">
+                <i data-lucide="sparkles"></i>
+                <span>Em đã mở đủ cả 4 phần quà rồi! Bức thư tình yêu sẽ tự động xuất hiện ngay sau đây...</span>
+            </div>
+        `;
+        msgEl.classList.remove('hidden');
+        if (window.lucide) lucide.createIcons();
+
+        triggerPastelConfetti({ particleCount: 70, spread: 80 });
+
+        if (autoLetterTimer) clearTimeout(autoLetterTimer);
+        autoLetterTimer = setTimeout(() => {
+            closeModal();
+            showFinalCelebration();
+        }, 2800);
+    } else {
+        msgEl.innerHTML = '';
+        msgEl.classList.add('hidden');
+    }
 }
 
 function closeModal() {
+    if (autoLetterTimer) {
+        clearTimeout(autoLetterTimer);
+        autoLetterTimer = null;
+    }
     document.getElementById('giftModal').classList.add('hidden');
     updateGiftReminder();
 
-    // RULE: If all 3 games are completed AND player has opened all 4 gifts -> Show Final Celebration Letter!
-    if (gameCompleted.every(Boolean) && openedGifts.size === 4) {
-        setTimeout(showFinalCelebration, 600);
+    // Nếu đã mở đủ 4/4 quà -> Bức thư tình yêu tự động xuất hiện ngay
+    if (openedGifts.size === 4) {
+        setTimeout(showFinalCelebration, 400);
     }
 }
 
@@ -620,6 +764,7 @@ function showFinalCelebration() {
     const overlay = document.getElementById('finalOverlay');
     if (!overlay) return;
     overlay.classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     if (window.lucide) lucide.createIcons();
 
     // Trigger multi-stage luxury pastel confetti
@@ -724,9 +869,164 @@ function showFinalCelebration() {
 
     spawnWave();
     animateFinal();
+
+    // BẮT ĐẦU HIỆU ỨNG CHẠY CHỮ LÃNG MẠN
+    startLetterTypewriter();
+}
+
+// ===================================================
+// ROMANTIC TYPEWRITER EFFECT CHO BỨC THƯ TÌNH
+// ===================================================
+const LETTER_PARAGRAPHS = [
+    {
+        id: 'letterSalutation',
+        fullText: 'Pé Thúi yêu thương nhất của anh,',
+        speed: 35,
+        pauseAfter: 350
+    },
+    {
+        id: 'letterP1',
+        fullText: 'Chúc mừng sinh nhật pé iu tròn 22 tuổi! Chúc em tuổi mới luôn tràn ngập nụ cười hạnh phúc, mãi xinh đẹp rạng ngời, mau ăn chóng lớn và gặt hái thật nhiều thành công nha! 🎂🌸',
+        speed: 26,
+        pauseAfter: 450
+    },
+    {
+        id: 'letterP2',
+        fullText: 'Cảm ơn em đã luôn ở bên, mang lại cho anh những ngày tháng ngọt ngào và ấm áp nhất. Anh mong rằng chúng mình sẽ cùng nhau đón thật nhiều sinh nhật nữa nhé! 💕✨',
+        speed: 26,
+        pauseAfter: 500
+    },
+    {
+        id: 'closingPhrase',
+        fullText: 'Yêu em nhiều lắm,',
+        speed: 40,
+        pauseAfter: 350
+    },
+    {
+        id: 'signatureName',
+        fullText: 'Anh yêu của em! ❤️',
+        speed: 45,
+        pauseAfter: 600
+    }
+];
+
+let letterTypewriterActive = false;
+let letterTypewriterTimeouts = [];
+
+function clearLetterTypewriter() {
+    letterTypewriterTimeouts.forEach(t => clearTimeout(t));
+    letterTypewriterTimeouts = [];
+    letterTypewriterActive = false;
+    document.querySelectorAll('.letter-cursor').forEach(c => c.remove());
+}
+
+function startLetterTypewriter() {
+    clearLetterTypewriter();
+    letterTypewriterActive = true;
+
+    const skipBtn = document.getElementById('letterSkipBtn');
+    if (skipBtn) skipBtn.style.display = 'inline-flex';
+
+    // Xóa rỗng các dòng để bắt đầu viết từng con chữ
+    LETTER_PARAGRAPHS.forEach(item => {
+        const el = document.getElementById(item.id);
+        if (el) el.innerHTML = '';
+    });
+
+    const deliveryBox = document.getElementById('deliveryNoticeBox');
+    if (deliveryBox) {
+        deliveryBox.classList.remove('visible');
+    }
+
+    let cursor = document.createElement('span');
+    cursor.className = 'letter-cursor';
+
+    function typeSegment(segmentIndex) {
+        if (!letterTypewriterActive) return;
+
+        if (segmentIndex >= LETTER_PARAGRAPHS.length) {
+            letterTypewriterActive = false;
+            if (cursor && cursor.parentNode) cursor.remove();
+            if (skipBtn) skipBtn.style.display = 'none';
+            triggerPastelConfetti({ particleCount: 65, spread: 85 });
+            return;
+        }
+
+        const seg = LETTER_PARAGRAPHS[segmentIndex];
+        const el = document.getElementById(seg.id);
+        if (!el) {
+            typeSegment(segmentIndex + 1);
+            return;
+        }
+
+        el.appendChild(cursor);
+
+        let charIndex = 0;
+        const text = seg.fullText;
+
+        function typeNextChar() {
+            if (!letterTypewriterActive) return;
+
+            if (charIndex < text.length) {
+                const char = text.charAt(charIndex);
+                el.insertBefore(document.createTextNode(char), cursor);
+                charIndex++;
+
+                // Nhịp thở tự nhiên: ngắt nghỉ khi gặp dấu câu
+                let delay = seg.speed;
+                if (char === '.' || char === '!' || char === '?') {
+                    delay += 250;
+                } else if (char === ',' || char === '—') {
+                    delay += 140;
+                }
+
+                const timer = setTimeout(typeNextChar, delay);
+                letterTypewriterTimeouts.push(timer);
+            } else {
+                // Sau khi viết xong đoạn 2 -> hiện khung thông báo quà đặc biệt
+                if (seg.id === 'letterP2' && deliveryBox) {
+                    deliveryBox.classList.add('visible');
+                }
+
+                const timer = setTimeout(() => {
+                    typeSegment(segmentIndex + 1);
+                }, seg.pauseAfter);
+                letterTypewriterTimeouts.push(timer);
+            }
+        }
+
+        typeNextChar();
+    }
+
+    // Bắt đầu viết sau 400ms kể từ khi phong thư mở ra
+    const initTimer = setTimeout(() => {
+        typeSegment(0);
+    }, 400);
+    letterTypewriterTimeouts.push(initTimer);
+}
+
+function skipLetterTypewriter() {
+    clearLetterTypewriter();
+
+    // Điền toàn bộ nội dung bức thư ngay lập tức
+    LETTER_PARAGRAPHS.forEach(item => {
+        const el = document.getElementById(item.id);
+        if (el) el.innerHTML = item.fullText;
+    });
+
+    const deliveryBox = document.getElementById('deliveryNoticeBox');
+    if (deliveryBox) {
+        deliveryBox.classList.add('visible');
+    }
+
+    const skipBtn = document.getElementById('letterSkipBtn');
+    if (skipBtn) skipBtn.style.display = 'none';
+
+    triggerPastelConfetti({ particleCount: 50, spread: 70 });
 }
 
 function closeLetter() {
+    clearLetterTypewriter();
     const overlay = document.getElementById('finalOverlay');
     if (overlay) overlay.classList.add('hidden');
 }
@@ -766,3 +1066,36 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+
+// ===================================================
+// FLOATING INTERACTIVE MASCOT (MÈO MEME / SHIN CUTE)
+// ===================================================
+const MASCOT_QUOTES = [
+    "Chúc Pé Thúi sinh nhật 22 tuổi luôn xinh đẹp, hạnh phúc nha! 🎂🌸",
+    "Em là cô gái đáng yêu và ngọt ngào nhất vũ trụ này! ✨💖",
+    "Cố lên pé iu, mở hết 4 phần quà để xem bức thư bí mật nhé! 🎁",
+    "Anh yêu Pé Thúi nhiều hơn cả những vì sao trên trời! 🌟💕",
+    "Hôm nay công chúa là nhất, muốn gì anh cũng chiều! 👑🥰",
+    "Mèo con chúc chị Linh mau ăn chóng lớn, luôn cười tươi nha! 🎈",
+    "Moah moah! Chúc mừng sinh nhật pé iu của anh! 💋❤️"
+];
+let currentMascotQuoteIdx = 0;
+
+function triggerMascotSpeech() {
+    const bubble = document.getElementById('mascotBubble');
+    const avatar = document.querySelector('.mascot-avatar-btn');
+    if (!bubble) return;
+
+    currentMascotQuoteIdx = (currentMascotQuoteIdx + 1) % MASCOT_QUOTES.length;
+    bubble.innerHTML = `<span>${MASCOT_QUOTES[currentMascotQuoteIdx]}</span>`;
+
+    // Hiệu ứng nảy avatar
+    if (avatar) {
+        avatar.style.transform = 'scale(1.2) rotate(10deg)';
+        setTimeout(() => {
+            avatar.style.transform = '';
+        }, 300);
+    }
+
+    triggerPastelConfetti({ particleCount: 25, spread: 45, origin: { x: 0.9, y: 0.85 } });
+}
