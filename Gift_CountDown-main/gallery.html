@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🖼️ Vườn Hoa Kỷ Niệm Của Chúng Mình</title>
-    <meta name="description" content="Những khoảnh khắc ngọt ngào của Linh Thúi & Pé Thúi...">
+    <link rel="icon" href="./favicon.ico" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
@@ -297,7 +297,7 @@
 
         .film-cell img {
             width: 100%;
-            height: 210px;
+            height: 100%;
             object-fit: cover;
             border-radius: 2px;
             transition: opacity 0.3s;
@@ -1485,7 +1485,7 @@
                 cell.id = `cell-${index}`;
                 cell.onclick = () => jumpToCell(index);
                 cell.innerHTML = `
-                    <img src="${item.src}" alt="Film Memory ${item.id}">
+                    <img src="${item.src}" alt="Film Memory ${item.id}" loading="${index < 3 ? 'eager' : 'lazy'}" decoding="async">
                 `;
                 track.appendChild(cell);
             });
@@ -1557,7 +1557,7 @@
                 div.className = 'grid-item';
                 div.onclick = () => openLightbox(item.src, item.caption);
                 div.innerHTML = `
-                    <img class="grid-img" src="${item.src}" alt="Grid Memory">
+                    <img class="grid-img" src="${item.src}" alt="Grid Memory" loading="lazy" decoding="async">
                     <div class="grid-caption">${item.caption}</div>
                 `;
                 grid.appendChild(div);

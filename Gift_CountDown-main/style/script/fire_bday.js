@@ -107,7 +107,7 @@ window.initFireworks = function () {
         const off  = document.createElement("canvas");
         off.width  = 300;
         off.height = 150;
-        const octx = off.getContext("2d");
+        const octx = off.getContext("2d", { willReadFrequently: true });
 
         octx.fillStyle    = "white";
         octx.font         = "bold 70px Arial";
