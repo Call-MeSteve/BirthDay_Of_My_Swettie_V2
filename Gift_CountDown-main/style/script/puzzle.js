@@ -393,3 +393,24 @@ function animateCeleb() {
         requestAnimationFrame(animateCeleb);
     }
 }
+
+// ===================================================
+// SILENT BACKGROUND PRELOADER (GALLERY ASSETS)
+// ===================================================
+window.addEventListener('load', () => {
+    const preloadList = [
+        './images/1.jpg', './images/2.jpg', './images/3.png', './images/4.png',
+        './images/5.png', './images/6.png', './images/7.jpg', './images/8.png',
+        './images/9.jpg', './images/10.jpg', './images/11.jpg', './images/12.jpg',
+        './images/intro3.gif', './images/moon03.gif', './images/intro04.gif'
+    ];
+    // Start background preloading after 1.5s so initial unlock card is silky smooth
+    setTimeout(() => {
+        preloadList.forEach(src => {
+            const img = new Image();
+            img.decoding = 'async';
+            img.src = src;
+        });
+    }, 1500);
+});
+
